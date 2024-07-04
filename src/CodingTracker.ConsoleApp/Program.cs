@@ -1,7 +1,7 @@
-﻿using System.Configuration;
-using CodingTracker.ConsoleApp.Views;
+﻿using CodingTracker.ConsoleApp.Views;
+using CodingTracker.Controllers;
 using Spectre.Console;
-using Spectre.Console.Cli;
+using System.Configuration;
 
 namespace CodingTracker.ConsoleApp;
 
@@ -17,18 +17,18 @@ internal class Program
             // string error = GetAppSettingsString("Error");
 
             // Create the required service.
-            //TODO:
+            var codingController = new CodingSessionController(databaseConnectionString);
 
             // Generate seed data if required.
             if (seedDatabase)
             {
                 AnsiConsole.WriteLine("Generating seed data. Please wait...");
-                // TODO:Service.SeedDatabase();
+                codingController.SeedDatabase();
                 AnsiConsole.WriteLine("Seed data generated.");
             }
 
             // Show the main menu.
-            var mainMenu = new MainMenuPage();
+            var mainMenu = new MainMenuPage(codingController);
             mainMenu.Show();
         }
         catch (Exception exception)

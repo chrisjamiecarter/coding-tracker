@@ -1,7 +1,8 @@
 ﻿using CodingTracker.ConsoleApp.Enums;
 using CodingTracker.ConsoleApp.Models;
+using CodingTracker.Controllers;
+using CodingTracker.Models;
 using Spectre.Console;
-using System.Collections.ObjectModel;
 
 namespace CodingTracker.ConsoleApp.Views;
 
@@ -16,14 +17,14 @@ internal class MainMenuPage : BasePage
     #endregion
     #region Fields
 
-    //TODO: private readonly Service _service;
+    private readonly CodingSessionController _codingSessionController;
 
     #endregion
     #region Constructors
 
-    public MainMenuPage() // TODO: pass in service.
+    public MainMenuPage(CodingSessionController codingSessionController)
     {
-        // TODO: assign fields.
+        _codingSessionController = codingSessionController;
     }
 
     #endregion
@@ -76,7 +77,16 @@ internal class MainMenuPage : BasePage
                 
             case 1:
                 // Do something.
-                AnsiConsole.WriteLine("Doing something now.");
+                //AnsiConsole.WriteLine("Doing something now.");
+                foreach (CodingSession item in _codingSessionController.GetCodingSessions())
+                {
+                    Console.Write($"ID = {item.Id}, ");
+                    Console.Write($"Start = {item.StartTime}, ");
+                    Console.Write($"End = {item.EndTime}, ");
+                    Console.WriteLine($"Duration = {item.Duration}");
+                }
+                Console.WriteLine("Press any key to continue...");
+                Console.ReadKey();
                 return PageStatus.Opened;
             default:
                 // Do nothing, but remain on this page.

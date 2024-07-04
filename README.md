@@ -12,12 +12,12 @@ This is a simple demo console application that allows a user to perform CRUD ope
 ## Requirements
 
 - [ ] Logs daily coding time.
-- [ ] Uses the "Spectre.Console" library to show the data on the console.
-- [ ] Has classes in separate files (ex. UserInput.cs, Validation.cs, CodingController.cs).
+- [x] Uses the "Spectre.Console" library to show the data on the console.
+- [x] Has classes in separate files.
 - [ ] Tells the user the required date and time input format and not allow any other format.
-- [ ] Has a configuration file that contains the database connection string.
+- [x] Has a configuration file that contains the database connection string.
 - [ ] Stores and retrieve data from a real database.
-- [ ] Creates a sqlite database, if one isn’t present, when the application starts.
+- [x] Creates a sqlite database, if one isn’t present, when the application starts.
 - [ ] Creates a table in the database, if one isn’t present, where Coding Sessions will be logged.
 - [ ] Shows the user a menu of options.
 - [ ] Allows users to insert, delete, update and view Coding Sessions.
