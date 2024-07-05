@@ -1,4 +1,5 @@
 ﻿using HabitTracker.Constants;
+using Spectre.Console;
 using System.Text;
 
 namespace CodingTracker.ConsoleApp.Views;
@@ -12,13 +13,13 @@ internal abstract class BasePage
 
     protected static void WriteFooter()
     {
-        Console.Write($"{Environment.NewLine}Press any key to continue...");
+        AnsiConsole.Write($"{Environment.NewLine}Press any key to continue...");
     }
 
     protected static void WriteHeader(string title)
     {
-        Console.Clear();
-        Console.Write(GetHeaderText(title));
+        AnsiConsole.Clear();
+        AnsiConsole.Write(GetHeaderText(title));
     }
 
     #endregion

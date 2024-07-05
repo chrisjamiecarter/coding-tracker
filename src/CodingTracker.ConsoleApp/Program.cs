@@ -22,8 +22,11 @@ internal class Program
             // Generate seed data if required.
             if (seedDatabase)
             {
-                AnsiConsole.WriteLine("Generating seed data. Please wait...");
-                codingController.SeedDatabase();
+                AnsiConsole.Status()
+                    .Spinner(Spinner.Known.Star)
+                    .Start("Generating seed data. Please wait...", ctx => {
+                        codingController.SeedDatabase();
+                    });
                 AnsiConsole.WriteLine("Seed data generated.");
             }
 

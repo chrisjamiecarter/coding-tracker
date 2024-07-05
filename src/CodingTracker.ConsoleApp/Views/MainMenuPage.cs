@@ -37,7 +37,10 @@ internal class MainMenuPage : BasePage
             return
             [
                 new(0, "Close application"),
-                new(1, "Do something")
+                new(1, "View coding sessions report"),
+                new(2, "Create coding session record"),
+                new(3, "Update coding session record"),
+                new(4, "Delete coding session record")
             ];
         }
     }
@@ -49,7 +52,7 @@ internal class MainMenuPage : BasePage
     {
         var status = PageStatus.Opened;
 
-        while(status != PageStatus.Closed)
+        while (status != PageStatus.Closed)
         {
             AnsiConsole.Clear();
 
@@ -71,12 +74,12 @@ internal class MainMenuPage : BasePage
         switch (option.Index)
         {
             case 0:
+
                 // Close application.
-                AnsiConsole.WriteLine("Closing application.");
                 return PageStatus.Closed;
-                
+
             case 1:
-                // Do something.
+                // View coding sessions report.
                 //AnsiConsole.WriteLine("Doing something now.");
                 foreach (CodingSession item in _codingSessionController.GetCodingSessions())
                 {
@@ -87,12 +90,50 @@ internal class MainMenuPage : BasePage
                 }
                 Console.WriteLine("Press any key to continue...");
                 Console.ReadKey();
-                return PageStatus.Opened;
+                break;
+
+            case 2:
+
+                // Create coding session record.
+                CreateCodingSession();
+                break;
+
+            case 3:
+
+                // Update coding session record.
+                break;
+
+            case 4:
+
+                // Delete coding session record.
+                break;
+
             default:
+
                 // Do nothing, but remain on this page.
-                return PageStatus.Opened;
+                break;
         }
+
+        return PageStatus.Opened;
     }
+
+    private void CreateCodingSession()
+    {
+        // Get required data.
+        var session = CreateCodingSessionPage.Show();
+        if (session == null)
+        {
+            // If nothing is returned, user has opted to not commit.
+            return;
+        }
+
+        // Add to database.
+        _codingSessionController.AddCodingSession(session);
+
+        // Display output.
+        MessagePage.Show("Create Coding Session", $"Coding session created successfully.");
+    }
+
 
     #endregion
 }

@@ -11,7 +11,7 @@ This is a simple demo console application that allows a user to perform CRUD ope
 
 ## Requirements
 
-- [ ] Logs daily coding time.
+- [x] Logs daily coding time.
 - [x] Uses the "Spectre.Console" library to show the data on the console.
 - [x] Has classes in separate files.
 - [ ] Tells the user the required date and time input format and not allow any other format.

@@ -1,6 +1,6 @@
 ﻿namespace CodingTracker.Constants;
 
-internal static class StringFormat
+public static class StringFormat
 {
-    internal static string DateTime = "yyyy-MM-dd HH:mm";
+    public static string DateTime = "yyyy-MM-dd HH:mm";
 }

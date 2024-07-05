@@ -19,6 +19,11 @@ public class CodingSessionController
     #endregion
     #region Methods: Public
 
+    public void AddCodingSession(CodingSession codingSession)
+    {
+        _dataManager.AddCodingSession(codingSession.StartTime, codingSession.EndTime, codingSession.Duration);
+    }
+
     public IReadOnlyList<CodingSession> GetCodingSessions()
     {
         return _dataManager.GetCodingSessions().Select(x => new CodingSession(x)).ToList();
