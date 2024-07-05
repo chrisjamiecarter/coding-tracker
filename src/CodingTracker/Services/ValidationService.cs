@@ -4,6 +4,9 @@ using System.Globalization;
 
 namespace CodingTracker.Services;
 
+/// <summary>
+/// Service to handle all user input validation.
+/// </summary>
 public static class ValidationService
 {
     public static ValidationResult IsValidStartDateTime(string input)
