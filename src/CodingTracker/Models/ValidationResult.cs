@@ -1,5 +1,8 @@
 ﻿namespace CodingTracker.Models;
 
+/// <summary>
+/// Holds a validation result and message.
+/// </summary>
 public class ValidationResult
 {
     public ValidationResult(bool isValid, string message)
