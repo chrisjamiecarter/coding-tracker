@@ -14,21 +14,21 @@ This is a simple demo console application that allows a user to perform CRUD ope
 - [x] Logs daily coding time.
 - [x] Uses the "Spectre.Console" library to show the data on the console.
 - [x] Has classes in separate files.
-- [ ] Tells the user the required date and time input format and not allow any other format.
+- [x] Tells the user the required date and time input format and not allow any other format.
 - [x] Has a configuration file that contains the database connection string.
-- [ ] Stores and retrieve data from a real database.
+- [x] Stores and retrieve data from a real database.
 - [x] Creates a sqlite database, if one isn’t present, when the application starts.
-- [ ] Creates a table in the database, if one isn’t present, where Coding Sessions will be logged.
-- [ ] Shows the user a menu of options.
+- [x] Creates a table in the database, if one isn’t present, where Coding Sessions will be logged.
+- [x] Shows the user a menu of options.
 - [ ] Allows users to insert, delete, update and view Coding Sessions.
-- [ ] Has a "CodingSession" class in a separate file, which contains the properties of a coding session: Id, StartTime, EndTime, Duration.
-- [ ] Allows the user to input the start and end times manually.
-- [ ] Does not allow the user to input the duration of the session. It must be calculated based on the Start and End times, in a separate "CalculateDuration" method.
-- [ ] Uses Dapper ORM for the data access instead of ADO.NET.
-- [ ] Does not use anonymous objects when reading from the database. It must read table data into a list of Coding Sessions.
-- [ ] Handles all possible errors so that the application never crashes.
-- [ ] Allows the user to insert 0 to terminate the application.
-- [ ] Contains a Read Me file which explains how the app works.
+- [x] Has a "CodingSession" class in a separate file, which contains the properties of a coding session: Id, StartTime, EndTime, Duration.
+- [x] Allows the user to input the start and end times manually.
+- [x] Does not allow the user to input the duration of the session. It must be calculated based on the Start and End times, in a separate "CalculateDuration" method.
+- [x] Uses Dapper ORM for the data access instead of ADO.NET.
+- [x] Does not use anonymous objects when reading from the database. It must read table data into a list of Coding Sessions.
+- [x] Handles all possible errors so that the application never crashes.
+- [x] Allows the user to insert 0 to terminate the application.
+- [x] Contains a Read Me file which explains how the app works.
 
 ### Additional Requirements
 
