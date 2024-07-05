@@ -1,8 +1,10 @@
 ﻿using CodingTracker.ConsoleApp.Enums;
 using CodingTracker.ConsoleApp.Models;
+using CodingTracker.Constants;
 using CodingTracker.Controllers;
 using CodingTracker.Models;
 using Spectre.Console;
+using System.Data;
 
 namespace CodingTracker.ConsoleApp.Views;
 
@@ -80,16 +82,7 @@ internal class MainMenuPage : BasePage
 
             case 1:
                 // View coding sessions report.
-                //AnsiConsole.WriteLine("Doing something now.");
-                foreach (CodingSession item in _codingSessionController.GetCodingSessions())
-                {
-                    Console.Write($"ID = {item.Id}, ");
-                    Console.Write($"Start = {item.StartTime}, ");
-                    Console.Write($"End = {item.EndTime}, ");
-                    Console.WriteLine($"Duration = {item.Duration}");
-                }
-                Console.WriteLine("Press any key to continue...");
-                Console.ReadKey();
+                ViewCodingSessionsReport();                
                 break;
 
             case 2:
@@ -115,6 +108,26 @@ internal class MainMenuPage : BasePage
         }
 
         return PageStatus.Opened;
+    }
+
+    private void ViewCodingSessionsReport()
+    {
+        // Get raw data.
+        var data = _codingSessionController.GetCodingSessions();
+
+        // Configure table data.
+        var table = new Table();
+        table.AddColumn("ID");
+        table.AddColumn("Start Time");
+        table.AddColumn("End Time");
+        table.AddColumn("Duration");
+        foreach (var x in data)
+        {
+            table.AddRow(x.Id.ToString(), x.StartTime.ToString(StringFormat.DateTime), x.EndTime.ToString(StringFormat.DateTime), x.Duration.ToString("F2"));
+        }
+        
+        // Display report.
+        MessagePage.Show("Habit Report", table);
     }
 
     private void CreateCodingSession()

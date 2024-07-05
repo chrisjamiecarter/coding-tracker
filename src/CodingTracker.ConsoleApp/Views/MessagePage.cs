@@ -23,5 +23,19 @@ internal class MessagePage : BasePage
         Console.ReadKey();
     }
 
+    internal static void Show(string title, Table table)
+    {
+        AnsiConsole.Clear();
+
+        WriteHeader(title);
+
+        AnsiConsole.Write(table);
+
+        WriteFooter();
+
+        // Await user confirmation to continue.
+        Console.ReadKey();
+    }
+
     #endregion
 }
