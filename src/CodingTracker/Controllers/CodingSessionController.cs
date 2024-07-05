@@ -2,6 +2,10 @@
 using CodingTracker.Models;
 
 namespace CodingTracker.Controllers;
+
+/// <summary>
+/// Controller class for the Coding Session object.
+/// </summary>
 public class CodingSessionController
 {
     #region Fields
