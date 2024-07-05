@@ -2,6 +2,9 @@
 
 namespace CodingTracker.Models;
 
+/// <summary>
+/// Coding session data transformation object.
+/// </summary>
 public class CodingSession
 {
     public CodingSession(CodingSessionEntity entity)
