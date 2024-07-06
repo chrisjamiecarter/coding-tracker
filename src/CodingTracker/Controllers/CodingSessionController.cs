@@ -28,19 +28,32 @@ public class CodingSessionController
         _dataManager.AddCodingSession(codingSession.StartTime, codingSession.EndTime, codingSession.Duration);
     }
 
-    public IReadOnlyList<CodingSession> GetCodingSessions()
+    public List<CodingSession> GetCodingSessions()
     {
         return _dataManager.GetCodingSessions().Select(x => new CodingSession(x)).ToList();
+    }
+
+    public void SetCodingSession(CodingSession codingSession)
+    {
+        _dataManager.SetCodingSession(codingSession.Id, codingSession.StartTime, codingSession.EndTime, codingSession.Duration);
+    }
+
+    public void DeleteCodingSession(CodingSession codingSession)
+    {
+        _dataManager.DeleteCodingSession(codingSession.Id);
     }
 
     public void SeedDatabase()
     {
         if (_dataManager.GetCodingSessions().Count == 0)
         {
-            var startDateTime = DateTime.Now.AddMinutes(-123);
-            var endDateTime = DateTime.Now;
-            var duration = (endDateTime - startDateTime).TotalHours;
-            _dataManager.AddCodingSession(startDateTime, endDateTime, duration);
+            for (int i = 100; i > 0; i--)
+            {
+                var endDateTime = DateTime.Now.AddDays(-i).AddMinutes(-Random.Shared.Next(0, 120));
+                var startDateTime = endDateTime.AddMinutes(-Random.Shared.Next(1, 120));
+                var duration = (endDateTime - startDateTime).TotalHours;
+                _dataManager.AddCodingSession(startDateTime, endDateTime, duration);
+            }            
         }
     }
 

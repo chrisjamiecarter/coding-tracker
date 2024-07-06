@@ -32,13 +32,7 @@ namespace CodingTracker.Data.Managers
         public SqliteDataManager(string connectionString)
         {
             ConnectionString = connectionString;
-
-            var connection = new SQLiteConnection(connectionString);
-            connection.Open();
-            var filePath = connection.FileName;
-            connection.Close();
-            if(File.Exists(filePath)) File.Delete(filePath);
-
+                       
             Initialise();
         }
 

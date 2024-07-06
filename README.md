@@ -20,7 +20,7 @@ This is a simple demo console application that allows a user to perform CRUD ope
 - [x] Creates a sqlite database, if one isn’t present, when the application starts.
 - [x] Creates a table in the database, if one isn’t present, where Coding Sessions will be logged.
 - [x] Shows the user a menu of options.
-- [ ] Allows users to insert, delete, update and view Coding Sessions.
+- [x] Allows users to insert, delete, update and view Coding Sessions.
 - [x] Has a "CodingSession" class in a separate file, which contains the properties of a coding session: Id, StartTime, EndTime, Duration.
 - [x] Allows the user to input the start and end times manually.
 - [x] Does not allow the user to input the duration of the session. It must be calculated based on the Start and End times, in a separate "CalculateDuration" method.

@@ -32,7 +32,7 @@ internal class MainMenuPage : BasePage
     #endregion
     #region Properties
 
-    internal static IEnumerable<MainMenuOption> PageOptions
+    internal static IEnumerable<PromptChoice> PageOptions
     {
         get
         {
@@ -61,7 +61,7 @@ internal class MainMenuPage : BasePage
             WriteHeader(PageTitle);
 
             var option = AnsiConsole.Prompt(
-                new SelectionPrompt<MainMenuOption>()
+                new SelectionPrompt<PromptChoice>()
                 .Title(PromptTitle)
                 .AddChoices(PageOptions)
                 .UseConverter(c => c.Name!)
@@ -71,9 +71,9 @@ internal class MainMenuPage : BasePage
         }
     }
 
-    private PageStatus PerformOption(MainMenuOption option)
+    private PageStatus PerformOption(PromptChoice option)
     {
-        switch (option.Index)
+        switch (option.Id)
         {
             case 0:
 
@@ -94,11 +94,13 @@ internal class MainMenuPage : BasePage
             case 3:
 
                 // Update coding session record.
+                UpdateCodingSession();
                 break;
 
             case 4:
 
                 // Delete coding session record.
+                DeleteCodingSession();
                 break;
 
             default:
@@ -140,13 +142,52 @@ internal class MainMenuPage : BasePage
             return;
         }
 
-        // Add to database.
+        // Commit to database.
         _codingSessionController.AddCodingSession(session);
 
         // Display output.
         MessagePage.Show("Create Coding Session", $"Coding session created successfully.");
     }
 
+    private void UpdateCodingSession()
+    {
+        // Get required data.
+        var codingSessions = _codingSessionController.GetCodingSessions();
+
+        // Get updated coding session.
+        var codingSession = UpdateCodingSessionPage.Show(codingSessions);
+        if (codingSession == null)
+        {
+            // If nothing is returned, user has opted to not commit.
+            return;
+        }
+
+        // Commit to database.
+        _codingSessionController.SetCodingSession(codingSession);
+
+        // Display output.
+        MessagePage.Show("Update Coding Session", $"Coding session updated successfully.");
+    }
+
+    private void DeleteCodingSession()
+    {
+        // Get required data.
+        var codingSessions = _codingSessionController.GetCodingSessions();
+
+        // Get coding session to be deleted.
+        var codingSession = DeleteCodingSessionPage.Show(codingSessions);
+        if (codingSession == null)
+        {
+            // If nothing is returned, user has opted to not commit.
+            return;
+        }
+
+        // Commit to database.
+        _codingSessionController.DeleteCodingSession(codingSession);
+
+        // Display output.
+        MessagePage.Show("Delete Coding Session", $"Coding session deleted successfully.");
+    }
 
     #endregion
 }

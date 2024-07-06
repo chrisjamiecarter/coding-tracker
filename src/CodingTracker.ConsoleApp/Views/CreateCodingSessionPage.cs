@@ -27,13 +27,13 @@ internal class CreateCodingSessionPage : BasePage
 
         var startMessage = $"Enter the start date and time, format '{StringFormat.DateTime}', or 0 to return to main menu: ";
         var startInput = AnsiConsole.Ask<string>(startMessage);
-        if (startInput == "0")
-        {
-            return nullCodingSession;
-        }
         var startInputValidation = ValidationService.IsValidStartDateTime(startInput);
         while (!startInputValidation.IsValid)
         {
+            if (startInput == "0")
+            {
+                return nullCodingSession;
+            }
             AnsiConsole.WriteLine(startInputValidation.Message);
             startInput = AnsiConsole.Ask<string>(startMessage);
             startInputValidation = ValidationService.IsValidStartDateTime(startInput);
@@ -44,13 +44,13 @@ internal class CreateCodingSessionPage : BasePage
 
         var endMessage = $"Enter the end date and time, format '{StringFormat.DateTime}', or 0 to return to main menu: ";
         var endInput = AnsiConsole.Ask<string>(endMessage);
-        if (endInput == "0")
-        {
-            return nullCodingSession;
-        }
         var endInputValidation = ValidationService.IsValidEndDateTime(endInput, start);
         while (!endInputValidation.IsValid)
         {
+            if (endInput == "0")
+            {
+                return nullCodingSession;
+            }
             AnsiConsole.WriteLine(endInputValidation.Message);
             endInput = AnsiConsole.Ask<string>(endMessage);
             endInputValidation = ValidationService.IsValidEndDateTime(endInput, start);
