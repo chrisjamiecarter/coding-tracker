@@ -23,9 +23,10 @@ public class CodingSessionController
     #endregion
     #region Methods: Public
 
-    public void AddCodingSession(CodingSession codingSession)
+    public void AddCodingSession(DateTime startTime, DateTime endTime)
     {
-        _dataManager.AddCodingSession(codingSession.StartTime, codingSession.EndTime, codingSession.Duration);
+        var duration = CalculateDuration(startTime, endTime);
+        _dataManager.AddCodingSession(startTime, endTime, duration);
     }
 
     public List<CodingSession> GetCodingSessions()
@@ -33,14 +34,15 @@ public class CodingSessionController
         return _dataManager.GetCodingSessions().Select(x => new CodingSession(x)).ToList();
     }
 
-    public void SetCodingSession(CodingSession codingSession)
+    public void SetCodingSession(int codingSessionId, DateTime startTime, DateTime endTime)
     {
-        _dataManager.SetCodingSession(codingSession.Id, codingSession.StartTime, codingSession.EndTime, codingSession.Duration);
+        var duration = CalculateDuration(startTime, endTime);
+        _dataManager.SetCodingSession(codingSessionId, startTime, endTime, duration);
     }
 
-    public void DeleteCodingSession(CodingSession codingSession)
+    public void DeleteCodingSession(int codingSessionId)
     {
-        _dataManager.DeleteCodingSession(codingSession.Id);
+        _dataManager.DeleteCodingSession(codingSessionId);
     }
 
     public void SeedDatabase()
@@ -55,6 +57,15 @@ public class CodingSessionController
                 _dataManager.AddCodingSession(startDateTime, endDateTime, duration);
             }            
         }
+    }
+
+    #endregion
+    #region Methods: Private
+
+    // Requirement: Do not let user enter duration. Must be calculated in the CodingSessionController.
+    private static double CalculateDuration(DateTime startTime, DateTime endTime)
+    {
+        return (endTime - startTime).TotalHours;
     }
 
     #endregion

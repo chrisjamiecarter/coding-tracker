@@ -15,11 +15,10 @@ public class CodingSession
         Duration = entity.Duration;
     }
 
-    public CodingSession(DateTime startTime, DateTime endTime, double duration)
+    public CodingSession(DateTime startTime, DateTime endTime)
     {
         StartTime = startTime;
         EndTime = endTime;
-        Duration = duration;
     }
 
     public int Id { get; init; }

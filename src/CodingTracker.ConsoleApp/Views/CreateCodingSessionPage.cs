@@ -57,17 +57,8 @@ internal class CreateCodingSessionPage : BasePage
         }
         DateTime end = DateTime.ParseExact(endInput, StringFormat.DateTime, CultureInfo.InvariantCulture, DateTimeStyles.None);
 
-        // Requirement: Do not let user enter duration. Must be calculated.
-        var duration = CalculateDuration(start, end);
-
-        return new CodingSession(start, end, duration);
-    }
-
-    private static double CalculateDuration(DateTime start, DateTime end)
-    {
-        return (end - start).TotalHours;
+        return new CodingSession(start, end);
     }
 
     #endregion
-
 }

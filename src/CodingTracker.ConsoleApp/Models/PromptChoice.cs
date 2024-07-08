@@ -9,9 +9,9 @@ internal class PromptChoice
 
     internal string? Name { get; init; }
 
-    public PromptChoice(int index, string name)
+    public PromptChoice(int id, string name)
     {
-        Id = index;
+        Id = id;
         Name = name;
     }
 }
