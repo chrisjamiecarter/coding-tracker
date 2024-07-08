@@ -1,10 +1,9 @@
-﻿using CodingTracker.ConsoleApp.Enums;
+﻿using CodingTracker.ConsoleApp.Constants;
+using CodingTracker.ConsoleApp.Enums;
 using CodingTracker.ConsoleApp.Models;
 using CodingTracker.Constants;
 using CodingTracker.Controllers;
-using CodingTracker.Models;
 using Spectre.Console;
-using System.Data;
 
 namespace CodingTracker.ConsoleApp.Views;
 
@@ -13,8 +12,6 @@ internal class MainMenuPage : BasePage
     #region Constants
 
     private const string PageTitle = "Main Menu";
-
-    private const string PromptTitle = "Select an option...";
 
     #endregion
     #region Fields
@@ -38,11 +35,12 @@ internal class MainMenuPage : BasePage
         {
             return
             [
-                new(0, "Close application"),
+                new(5, "Start live coding session"),
                 new(1, "View coding sessions report"),
                 new(2, "Create coding session record"),
                 new(3, "Update coding session record"),
-                new(4, "Delete coding session record")
+                new(4, "Delete coding session record"),
+                new(0, "Close application")
             ];
         }
     }
@@ -62,7 +60,7 @@ internal class MainMenuPage : BasePage
 
             var option = AnsiConsole.Prompt(
                 new SelectionPrompt<PromptChoice>()
-                .Title(PromptTitle)
+                .Title(Prompt.Title)
                 .AddChoices(PageOptions)
                 .UseConverter(c => c.Name!)
                 );
@@ -103,6 +101,12 @@ internal class MainMenuPage : BasePage
                 DeleteCodingSession();
                 break;
 
+            case 5:
+
+                // Delete coding session record.
+                LiveCodingSession();
+                break;
+
             default:
 
                 // Do nothing, but remain on this page.
@@ -135,15 +139,15 @@ internal class MainMenuPage : BasePage
     private void CreateCodingSession()
     {
         // Get required data.
-        var session = CreateCodingSessionPage.Show();
-        if (session == null)
+        var codingSession = CreateCodingSessionPage.Show();
+        if (codingSession == null)
         {
             // If nothing is returned, user has opted to not commit.
             return;
         }
 
         // Commit to database.
-        _codingSessionController.AddCodingSession(session);
+        _codingSessionController.AddCodingSession(codingSession.StartTime, codingSession.EndTime);
 
         // Display output.
         MessagePage.Show("Create Coding Session", $"Coding session created successfully.");
@@ -163,7 +167,7 @@ internal class MainMenuPage : BasePage
         }
 
         // Commit to database.
-        _codingSessionController.SetCodingSession(codingSession);
+        _codingSessionController.SetCodingSession(codingSession.Id, codingSession.StartTime, codingSession.EndTime);
 
         // Display output.
         MessagePage.Show("Update Coding Session", $"Coding session updated successfully.");
@@ -183,10 +187,22 @@ internal class MainMenuPage : BasePage
         }
 
         // Commit to database.
-        _codingSessionController.DeleteCodingSession(codingSession);
+        _codingSessionController.DeleteCodingSession(codingSession.Id);
 
         // Display output.
         MessagePage.Show("Delete Coding Session", $"Coding session deleted successfully.");
+    }
+
+    private void LiveCodingSession()
+    {
+        // Get required data.
+        var codingSession = LiveCodingSessionPage.Show();
+
+        // Commit to database.
+        _codingSessionController.AddCodingSession(codingSession.StartTime, codingSession.EndTime);
+
+        // Display output.
+        MessagePage.Show("Live Coding Session", $"Coding session created successfully.");
     }
 
     #endregion

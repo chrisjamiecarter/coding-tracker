@@ -32,7 +32,7 @@ This is a simple demo console application that allows a user to perform CRUD ope
 
 ### Additional Requirements
 
-- [ ] Allows the user to track a live Coding Session time via a stopwatch.
+- [x] Allows the user to track a live Coding Session time via a stopwatch.
 - [ ] Allows the user to filter a report of Coding Sessions by period (weeks, days, years) and/or order ascending or descending.
 - [ ] Allows the user to filter a report of Coding Sessions by total and average coding session per period.
 - [ ] Allows the user to set coding goals and show how far the user is from reaching their goal, along with how many hours a day they would have to code to reach their goal.
