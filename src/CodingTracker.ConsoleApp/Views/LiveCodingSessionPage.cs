@@ -36,6 +36,9 @@ internal class LiveCodingSessionPage : BasePage
         AnsiConsole.WriteLine();
         AnsiConsole.WriteLine("Press any key to stop the session...");
 
+        // Stop the cursor flashing every update.
+        Console.CursorVisible = false;
+        
         var lastUpdate = stopwatch.Elapsed;
         while (!Console.KeyAvailable)
         {
