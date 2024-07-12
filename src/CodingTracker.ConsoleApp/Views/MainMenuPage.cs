@@ -3,11 +3,7 @@ using CodingTracker.ConsoleApp.Enums;
 using CodingTracker.ConsoleApp.Models;
 using CodingTracker.Constants;
 using CodingTracker.Controllers;
-using CodingTracker.Enums;
-using CodingTracker.Models;
 using Spectre.Console;
-using System.ComponentModel;
-using System.Linq;
 
 namespace CodingTracker.ConsoleApp.Views;
 
@@ -21,13 +17,15 @@ internal class MainMenuPage : BasePage
     #region Fields
 
     private readonly CodingSessionController _codingSessionController;
+    private readonly CodingGoalController _codingGoalController;
 
     #endregion
     #region Constructors
 
-    public MainMenuPage(CodingSessionController codingSessionController)
+    public MainMenuPage(CodingSessionController codingSessionController, CodingGoalController codingGoalController)
     {
         _codingSessionController = codingSessionController;
+        _codingGoalController = codingGoalController;
     }
 
     #endregion
@@ -45,6 +43,7 @@ internal class MainMenuPage : BasePage
                 new(2, "Create coding session record"),
                 new(3, "Update coding session record"),
                 new(4, "Delete coding session record"),
+                new(7, "Set coding goal"),
                 new(0, "Close application")
             ];
         }
@@ -63,6 +62,8 @@ internal class MainMenuPage : BasePage
 
             WriteHeader(PageTitle);
 
+            WriteCodingGoal();
+
             var option = AnsiConsole.Prompt(
                 new SelectionPrompt<PromptChoice>()
                 .Title(Prompt.Title)
@@ -73,6 +74,50 @@ internal class MainMenuPage : BasePage
             status = PerformOption(option);
         }
     }
+
+    private void WriteCodingGoal()
+    {
+        var progress = GetCodingGoalProgress();
+        AnsiConsole.WriteLine($"Welcome, {progress}");
+        AnsiConsole.WriteLine();
+    }
+
+    public string GetCodingGoalProgress()
+    {
+        var codingGoal = _codingGoalController.GetCodingGoal();
+        if (codingGoal == null || codingGoal.WeeklyDurationInHours == 0)
+        {
+            return "please set a coding goal for motivation.";
+        }
+
+        // Lets say a week is Monday - Sunday.
+        var startOfWeek = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek + (int)DayOfWeek.Monday);
+        var endOfWeek = startOfWeek.AddDays(7).AddTicks(-1);
+
+        // Get the total duration spent this week.
+        var codingSessions = _codingSessionController.GetCodingSessions().Where(w => w.StartTime >= startOfWeek && w.EndTime <= endOfWeek);
+        double totalDuration = codingSessions.Sum(x => x.Duration);
+
+        // Get difference
+        double difference = codingGoal.WeeklyDurationInHours - totalDuration;
+
+        // Goal Reached?
+        if (difference <= 0)
+        {
+            return $"you have reached your weekly coding goal. Well done!";
+        }
+        else if (difference < 0)
+        {
+            return $"you are {Math.Abs(difference):F2} hours over your weekly coding goal. Well done!";
+        }
+
+        // Get required.
+        var daysRemaining = (endOfWeek.Date - DateTime.Today).Days;
+        var averagePerDay = difference / daysRemaining;
+
+        return $"you require {difference:F2} more hours to reach your weekly coding goal. Which is {averagePerDay:F2} hours per day. You can do it!";
+    }
+
 
     private PageStatus PerformOption(PromptChoice option)
     {
@@ -118,6 +163,12 @@ internal class MainMenuPage : BasePage
                 FilterCodingSessionsReport();
                 break;
 
+            case 7:
+
+                // Set coding goal.
+                SetCodingGoal();
+                break;
+
             default:
 
                 // Do nothing, but remain on this page.
@@ -125,6 +176,24 @@ internal class MainMenuPage : BasePage
         }
 
         return PageStatus.Opened;
+    }
+
+    private void SetCodingGoal()
+    {
+        // Get coding goal.
+        var codingGoal = SetCodingGoalPage.Show();
+        if (codingGoal == null)
+        {
+            // If nothing is returned, user has opted to not commit.
+            return;
+        }
+
+        // Commit to database.
+        _codingGoalController.SetCodingGoal(codingGoal.WeeklyDurationInHours);
+
+        // Display output.
+        MessagePage.Show("Set Coding Goal", $"Coding goal set successfully.");
+
     }
 
     private void ViewCodingSessionsReport()

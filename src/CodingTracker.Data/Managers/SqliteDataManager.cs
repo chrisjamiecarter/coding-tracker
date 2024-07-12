@@ -21,6 +21,15 @@ namespace CodingTracker.Data.Managers
             )
             ;";
 
+        private static readonly string CreateTableCodingGoalQuery =
+            @"
+            CREATE TABLE IF NOT EXISTS CodingGoal
+            (
+                 Id INTEGER PRIMARY KEY AUTOINCREMENT
+                ,WeeklyDurationInHours REAL NOT NULL
+            )
+            ;";
+
         #endregion
         #region Properties
 
@@ -43,6 +52,8 @@ namespace CodingTracker.Data.Managers
         {
             // Put all table creation methods here, in dependency order.
             CreateTableCodingSession();
+            CreateTableCodingGoal();
+            AddCodingGoal();
         }
 
         #endregion
@@ -53,6 +64,13 @@ namespace CodingTracker.Data.Managers
             using var connection = new SQLiteConnection(ConnectionString);
             connection.Open();
             connection.Execute(CreateTableCodingSessionQuery);
+        }
+
+        private void CreateTableCodingGoal()
+        {
+            using var connection = new SQLiteConnection(ConnectionString);
+            connection.Open();
+            connection.Execute(CreateTableCodingGoalQuery);
         }
 
         #endregion

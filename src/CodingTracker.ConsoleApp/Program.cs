@@ -16,22 +16,24 @@ internal class Program
             bool seedDatabase = GetAppSettingsBoolean("SeedDatabase");
             // string error = GetAppSettingsString("Error");
 
-            // Create the required service.
-            var codingController = new CodingSessionController(databaseConnectionString);
+            // Create the required services.
+            var codingSessionController = new CodingSessionController(databaseConnectionString);
+            var codingGoalController = new CodingGoalController(databaseConnectionString);
 
             // Generate seed data if required.
             if (seedDatabase)
             {
                 AnsiConsole.Status()
-                    .Spinner(Spinner.Known.Star)
-                    .Start("Generating seed data. Please wait...", ctx => {
-                        codingController.SeedDatabase();
+                    .Spinner(Spinner.Known.Aesthetic)
+                    .Start("Generating seed data. Please wait...", ctx =>
+                    {
+                        codingSessionController.SeedDatabase();
                     });
                 AnsiConsole.WriteLine("Seed data generated.");
             }
 
             // Show the main menu.
-            var mainMenu = new MainMenuPage(codingController);
+            var mainMenu = new MainMenuPage(codingSessionController, codingGoalController);
             mainMenu.Show();
         }
         catch (Exception exception)

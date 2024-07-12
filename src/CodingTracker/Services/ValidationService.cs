@@ -9,6 +9,16 @@ namespace CodingTracker.Services;
 /// </summary>
 public static class ValidationService
 {
+    public static ValidationResult IsValidCodingGoalDuration(double input)
+    {
+        if (input < 0)
+        {
+            return new ValidationResult(false, "Coding goal must be greater than zero.");
+        }
+        
+        return new ValidationResult(true, "Validation successful");
+    }
+
     public static ValidationResult IsValidReportStartDate(string input, string format)
     {
         if (string.IsNullOrWhiteSpace(input))
