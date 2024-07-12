@@ -70,11 +70,13 @@ internal class UpdateCodingSessionPage : BasePage
         AnsiConsole.Write(table);
         AnsiConsole.WriteLine();
 
+        var dateStringFormat = StringFormat.DateTime;
+
         // TODO: Refactor!
 
-        var startMessage = $"Enter the start date and time, format '{StringFormat.DateTime}', or 0 to return to main menu: ";
+        var startMessage = $"Enter the start date and time, format '{dateStringFormat}', or 0 to return to main menu: ";
         var startInput = AnsiConsole.Ask<string>(startMessage);
-        var startInputValidation = ValidationService.IsValidStartDateTime(startInput);
+        var startInputValidation = ValidationService.IsValidStartDateTime(startInput, dateStringFormat);
         while (!startInputValidation.IsValid)
         {
             if (startInput == "0")
@@ -83,15 +85,15 @@ internal class UpdateCodingSessionPage : BasePage
             }
             AnsiConsole.WriteLine(startInputValidation.Message);
             startInput = AnsiConsole.Ask<string>(startMessage);
-            startInputValidation = ValidationService.IsValidStartDateTime(startInput);
+            startInputValidation = ValidationService.IsValidStartDateTime(startInput, dateStringFormat);
         }
-        DateTime start = DateTime.ParseExact(startInput, StringFormat.DateTime, CultureInfo.InvariantCulture, DateTimeStyles.None);
+        DateTime start = DateTime.ParseExact(startInput, dateStringFormat, CultureInfo.InvariantCulture, DateTimeStyles.None);
 
         // TODO: Refactor!
 
-        var endMessage = $"Enter the end date and time, format '{StringFormat.DateTime}', or 0 to return to main menu: ";
+        var endMessage = $"Enter the end date and time, format '{dateStringFormat}', or 0 to return to main menu: ";
         var endInput = AnsiConsole.Ask<string>(endMessage);
-        var endInputValidation = ValidationService.IsValidEndDateTime(endInput, start);
+        var endInputValidation = ValidationService.IsValidEndDateTime(endInput, dateStringFormat, start);
         while (!endInputValidation.IsValid)
         {
             if (endInput == "0")
@@ -100,9 +102,9 @@ internal class UpdateCodingSessionPage : BasePage
             }
             AnsiConsole.WriteLine(endInputValidation.Message);
             endInput = AnsiConsole.Ask<string>(endMessage);
-            endInputValidation = ValidationService.IsValidEndDateTime(endInput, start);
+            endInputValidation = ValidationService.IsValidEndDateTime(endInput, dateStringFormat, start);
         }
-        DateTime end = DateTime.ParseExact(endInput, StringFormat.DateTime, CultureInfo.InvariantCulture, DateTimeStyles.None);
+        DateTime end = DateTime.ParseExact(endInput, dateStringFormat, CultureInfo.InvariantCulture, DateTimeStyles.None);
 
         return new CodingSession(start, end)
         { 
