@@ -7,7 +7,7 @@
 
 Welcome to the Coding Tracker App!
 
-This is a simple demo console application that allows a user to perform CRUD operations against a database.
+This is a simple demo console application that allows a user to perform CRUD operations against a database via Dapper.
 
 ## Requirements
 
@@ -17,8 +17,8 @@ This is a simple demo console application that allows a user to perform CRUD ope
 - [x] Tells the user the required date and time input format and not allow any other format.
 - [x] Has a configuration file that contains the database connection string.
 - [x] Stores and retrieve data from a real database.
-- [x] Creates a sqlite database, if one isn’t present, when the application starts.
-- [x] Creates a table in the database, if one isn’t present, where Coding Sessions will be logged.
+- [x] Creates a sqlite database, if one isnâ€™t present, when the application starts.
+- [x] Creates a table in the database, if one isnâ€™t present, where Coding Sessions will be logged.
 - [x] Shows the user a menu of options.
 - [x] Allows users to insert, delete, update and view Coding Sessions.
 - [x] Has a "CodingSession" class in a separate file, which contains the properties of a coding session: Id, StartTime, EndTime, Duration.
@@ -43,7 +43,7 @@ This is a simple demo console application that allows a user to perform CRUD ope
  
 	Add a new manual coding session entry in the database. Or, use the live session feature to record as you code and track your time and progress.
 
-- **Reporting**:
+- **Reporting**
 
 	View all coding sessions entries from the database, and displays them and the total and average durations in the console. Or, filter a coding session report by date range, group by day, week, month, year, and order by ascending or descending.
 
