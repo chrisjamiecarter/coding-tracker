@@ -4,7 +4,7 @@ using CodingTracker.Models;
 namespace CodingTracker.Controllers;
 
 /// <summary>
-/// Controller class for the Coding Goal object.
+/// Controller class for the Coding Goal object and the database entity.
 /// </summary>
 public class CodingGoalController
 {
@@ -21,11 +21,12 @@ public class CodingGoalController
     }
 
     #endregion
-    #region Methods: Public
+    #region Methods
 
     public CodingGoal GetCodingGoal()
     {
-        return new(_dataManager.GetCodingGoal());
+        var entity = _dataManager.GetCodingGoal();
+        return new CodingGoal(entity);
     }
 
     public void SetCodingGoal(double weeklyDurationInHours)

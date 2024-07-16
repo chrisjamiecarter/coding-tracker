@@ -2,19 +2,26 @@
 using CodingTracker.Controllers;
 using Spectre.Console;
 using System.Configuration;
+using CodingTracker.ConsoleApp.Extensions;
 
 namespace CodingTracker.ConsoleApp;
 
 internal class Program
 {
+    #region Methods
+
+    /// <summary>
+    /// Main insertion point of the program.
+    /// Gets config settings and launches the main menu.
+    /// </summary>
+    /// <param name="args">Any arguments passed in.</param>
     private static void Main(string[] args)
     {
         try
         {
             // Read required configuration settings.
-            string databaseConnectionString = GetAppSettingsString("DatabaseConnectionString");
-            bool seedDatabase = GetAppSettingsBoolean("SeedDatabase");
-            // string error = GetAppSettingsString("Error");
+            string databaseConnectionString = ConfigurationManager.AppSettings.GetString("DatabaseConnectionString");
+            bool seedDatabase = ConfigurationManager.AppSettings.GetBoolean("SeedDatabase");
 
             // Create the required services.
             var codingSessionController = new CodingSessionController(databaseConnectionString);
@@ -23,6 +30,7 @@ internal class Program
             // Generate seed data if required.
             if (seedDatabase)
             {
+                // Could be a long(ish) process, so show a spinner while it works.
                 AnsiConsole.Status()
                     .Spinner(Spinner.Known.Aesthetic)
                     .Start("Generating seed data. Please wait...", ctx =>
@@ -38,9 +46,7 @@ internal class Program
         }
         catch (Exception exception)
         {
-            // Replace with: MessagePage.Show("Error", exception.Message);
-            AnsiConsole.WriteException(exception, ExceptionFormats.NoStackTrace);
-            Console.ReadKey();
+            MessagePage.Show("Error", exception);
         }
         finally
         {
@@ -48,32 +54,5 @@ internal class Program
         }
     }
 
-    private static bool GetAppSettingsBoolean(string key)
-    {
-        string? value = ConfigurationManager.AppSettings.Get(key);
-
-        if (value == null)
-        {
-            throw new Exception($"Unable to get a value for '{key}' in App.config.");
-        }
-
-        if (!bool.TryParse(value, out bool result))
-        {
-            throw new Exception($"Unable to parse '{value}' to boolean for '{key}' in App.config.");
-        }
-
-        return result;
-    }
-
-    private static string GetAppSettingsString(string key)
-    {
-        string? value = ConfigurationManager.AppSettings.Get(key);
-
-        if (value == null)
-        {
-            throw new Exception($"Unable to get a value for '{key}' in App.config.");
-        }
-
-        return value;
-    }
+    #endregion
 }

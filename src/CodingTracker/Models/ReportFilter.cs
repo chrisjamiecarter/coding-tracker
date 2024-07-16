@@ -1,12 +1,16 @@
 ﻿using CodingTracker.Constants;
 using CodingTracker.Enums;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.ComponentModel;
 
 namespace CodingTracker.Models;
 
+/// <summary>
+/// The filter to apply to a Report.
+/// </summary>
 public class ReportFilter
 {
+    #region Properties
+
     public ReportFilterType Type { get; set; }
 
     public DateTime? StartDate { get; set; }
@@ -14,6 +18,9 @@ public class ReportFilter
     public DateTime? EndDate { get; set; }
 
     public ReportOrderByType OrderBy { get; set; }
+
+    #endregion
+    #region Methods
 
     public IEnumerable<CodingSessionReport> Apply(IEnumerable<CodingSession> items)
     {
@@ -52,4 +59,6 @@ public class ReportFilter
         // Return output.
         return orderedItems;
     }
+
+    #endregion
 }

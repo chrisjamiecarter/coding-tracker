@@ -1,11 +1,16 @@
 ﻿namespace CodingTracker.Models;
 
 /// <summary>
-/// Coding session data transformation object.
+/// A report view specific coding session data transformation object.
 /// </summary>
 public class CodingSessionReport
 {
-    private string _dateTimeFormat;
+    #region Fields
+
+    private readonly string _dateTimeFormat;
+
+    #endregion
+    #region Constructors
 
     public CodingSessionReport(DateTime start, DateTime end, double duration, string dateTimeFormat)
     {
@@ -14,6 +19,9 @@ public class CodingSessionReport
         Duration = duration;
         _dateTimeFormat = dateTimeFormat;
     }
+
+    #endregion
+    #region Properties
 
     public DateTime StartDateTime { get; init; }
     
@@ -26,4 +34,6 @@ public class CodingSessionReport
     public double Duration { get; init; }
 
     public string DurationString => Duration.ToString("F2");
+
+    #endregion
 }

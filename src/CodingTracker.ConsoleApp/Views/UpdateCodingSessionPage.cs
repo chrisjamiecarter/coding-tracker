@@ -1,13 +1,16 @@
 ﻿using CodingTracker.ConsoleApp.Models;
+using CodingTracker.ConsoleApp.Services;
 using CodingTracker.Constants;
 using CodingTracker.Models;
 using CodingTracker.Services;
 using Spectre.Console;
 using System.Globalization;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace CodingTracker.ConsoleApp.Views;
 
+/// <summary>
+/// Page which allows users to update a CodingSession.
+/// </summary>
 internal class UpdateCodingSessionPage : BasePage
 {
     #region Constants
@@ -19,7 +22,7 @@ internal class UpdateCodingSessionPage : BasePage
     #endregion
     #region Properties
 
-    internal static IEnumerable<PromptChoice> PageOptions
+    internal static IEnumerable<UserChoice> PageChoices
     {
         get
         {
@@ -31,34 +34,31 @@ internal class UpdateCodingSessionPage : BasePage
     }
 
     #endregion
-    #region Methods: Internal
+    #region Methods - Internal
 
     internal static CodingSession? Show(List<CodingSession> codingSessions)
     {
-        CodingSession? nullCodingSession = null;
-
         AnsiConsole.Clear();
 
         WriteHeader(PageTitle);
 
         var option = GetOption(codingSessions);
-
+        
+        // Close page.
         if (option.Id == 0)
         {
-            // Close page.
-            return nullCodingSession;
+            return null;
         }
-        else
-        {
-            var codingSession = codingSessions.First(x => x.Id == option.Id);
-            return GetUpdatedCodingSession(codingSession);
-        }
+
+        // Get the updated CodingSession from user input.
+        var codingSession = codingSessions.First(x => x.Id == option.Id);
+        codingSession = GetUpdatedCodingSession(codingSession);
+        
+        return codingSession;
     }
 
     private static CodingSession? GetUpdatedCodingSession(CodingSession codingSession)
     {
-        CodingSession? nullCodingSession = null;
-
         // Configure table data.
         var table = new Table();
         table.AddColumn("ID");
@@ -70,66 +70,53 @@ internal class UpdateCodingSessionPage : BasePage
         AnsiConsole.Write(table);
         AnsiConsole.WriteLine();
 
-        var dateStringFormat = StringFormat.DateTime;
+        string dateTimeFormat = StringFormat.DateTime;
 
-        // TODO: Refactor!
+        // Get the updated start date time of the CodingSession.
+        DateTime? start = UserInputService.GetDateTime(
+            $"Enter the start date and time, format [blue]{dateTimeFormat}[/], or [blue]0[/] to return to main menu: ",
+            dateTimeFormat,
+            input => UserInputValidationService.IsValidCodingSessionStartDateTime(input, dateTimeFormat)
+        );
 
-        var startMessage = $"Enter the start date and time, format '{dateStringFormat}', or 0 to return to main menu: ";
-        var startInput = AnsiConsole.Ask<string>(startMessage);
-        var startInputValidation = ValidationService.IsValidStartDateTime(startInput, dateStringFormat);
-        while (!startInputValidation.IsValid)
+        // If nothing is returned, user has opted to not commit.
+        if (start == null)
         {
-            if (startInput == "0")
-            {
-                return nullCodingSession;
-            }
-            AnsiConsole.WriteLine(startInputValidation.Message);
-            startInput = AnsiConsole.Ask<string>(startMessage);
-            startInputValidation = ValidationService.IsValidStartDateTime(startInput, dateStringFormat);
+            return null;
         }
-        DateTime start = DateTime.ParseExact(startInput, dateStringFormat, CultureInfo.InvariantCulture, DateTimeStyles.None);
 
-        // TODO: Refactor!
+        // Get the end date time of the CodingSession.
+        DateTime? end = UserInputService.GetDateTime(
+            $"Enter the end date and time, format [blue]{dateTimeFormat}[/], or [blue]0[/] to return to main menu: ",
+            dateTimeFormat,
+            input => UserInputValidationService.IsValidCodingSessionEndDateTime(input, dateTimeFormat, start.Value)
+            );
 
-        var endMessage = $"Enter the end date and time, format '{dateStringFormat}', or 0 to return to main menu: ";
-        var endInput = AnsiConsole.Ask<string>(endMessage);
-        var endInputValidation = ValidationService.IsValidEndDateTime(endInput, dateStringFormat, start);
-        while (!endInputValidation.IsValid)
+        // If nothing is returned, user has opted to not commit.
+        if (end == null)
         {
-            if (endInput == "0")
-            {
-                return nullCodingSession;
-            }
-            AnsiConsole.WriteLine(endInputValidation.Message);
-            endInput = AnsiConsole.Ask<string>(endMessage);
-            endInputValidation = ValidationService.IsValidEndDateTime(endInput, dateStringFormat, start);
+            return null;
         }
-        DateTime end = DateTime.ParseExact(endInput, dateStringFormat, CultureInfo.InvariantCulture, DateTimeStyles.None);
 
-        return new CodingSession(start, end)
+        // Start and end contain values, return new CodingSession.
+        return new CodingSession(start.Value, end.Value)
         { 
             Id = codingSession.Id
         };
     }
 
-    private static double CalculateDuration(DateTime start, DateTime end)
-    {
-        return (end - start).TotalHours;
-    }
-
     #endregion
-    #region Methods: Private
+    #region Methods - Private
 
-    private static PromptChoice GetOption(List<CodingSession> codingSessions)
+    private static UserChoice GetOption(List<CodingSession> codingSessions)
     {
-        // Add the coding sessions to the existing PageOptions.
-        IEnumerable<PromptChoice> pageOptions = [.. PageOptions, ..codingSessions.Select(x => new PromptChoice(x.Id, $"{x.StartTime.ToString(StringFormat.DateTime)} - {x.EndTime.ToString(StringFormat.DateTime)} ({x.Duration.ToString("F2")})"))];
+        // Add the coding sessions to the existing PageChoices.
+        IEnumerable<UserChoice> pageChoices = [.. PageChoices, .. codingSessions.Select(x => new UserChoice(x.Id, $"{x.StartTime.ToString(StringFormat.DateTime)} - {x.EndTime.ToString(StringFormat.DateTime)} ({x.Duration:F2)})"))];
 
         return AnsiConsole.Prompt(
-                new SelectionPrompt<PromptChoice>()
+                new SelectionPrompt<UserChoice>()
                 .Title(PromptTitle)
-                .AddChoices(pageOptions)
-                .MoreChoicesText("Show more...")
+                .AddChoices(pageChoices)
                 .UseConverter(c => c.Name!)
                 );
     }

@@ -9,28 +9,35 @@ namespace CodingTracker.ConsoleApp.Views;
 /// </summary>
 internal abstract class BasePage
 {
-    #region Methods: Protected
+    #region Constants
+
+    protected static readonly string PromptTitle = "Select an [blue]option[/]...";
+
+    private static readonly string DividerLine = "[cyan2]----------------------------------------[/]";
+
+    #endregion
+    #region Methods - Protected
 
     protected static void WriteFooter()
     {
-        AnsiConsole.Write($"{Environment.NewLine}Press any key to continue...");
+        AnsiConsole.Markup($"{Environment.NewLine}Press any [blue]key[/] to continue...");
     }
 
     protected static void WriteHeader(string title)
     {
         AnsiConsole.Clear();
-        AnsiConsole.Write(GetHeaderText(title));
+        AnsiConsole.Markup(GetHeaderText(title));
     }
 
     #endregion
-    #region Methods: Private
+    #region Methods - Private
 
     private static string GetHeaderText(string pageTitle)
     {
         var sb = new StringBuilder();
-        sb.AppendLine("----------------------------------------");
-        sb.AppendLine($"{Application.Title}: {pageTitle}");
-        sb.AppendLine("----------------------------------------");
+        sb.AppendLine(DividerLine);
+        sb.AppendLine($"[bold cyan2]{Application.Title}[/]: [honeydew2]{pageTitle}[/]");
+        sb.AppendLine(DividerLine);
         sb.AppendLine();
         return sb.ToString();
     }
