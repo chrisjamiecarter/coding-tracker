@@ -1,10 +1,12 @@
 ﻿using CodingTracker.Models;
 using Spectre.Console;
-using System;
 using System.Diagnostics;
 
 namespace CodingTracker.ConsoleApp.Views;
 
+/// <summary>
+/// Page which allows users to start and track live CodingSession.
+/// </summary>
 internal class LiveCodingSessionPage : BasePage
 {
     #region Constants
@@ -22,7 +24,7 @@ internal class LiveCodingSessionPage : BasePage
         WriteHeader(PageTitle);
         AnsiConsole.WriteLine();
         AnsiConsole.WriteLine();
-        AnsiConsole.WriteLine("Press any key to start the session...");
+        AnsiConsole.MarkupLine("Press any [blue]key[/] to start the session...");
         Console.ReadKey();
 
         // Start timer.
@@ -32,9 +34,9 @@ internal class LiveCodingSessionPage : BasePage
         AnsiConsole.Clear();
         WriteHeader(PageTitle);
         var stopwatchDisplayRow = Console.CursorTop;
-        AnsiConsole.WriteLine(@$"Current coding session duration: {stopwatch.Elapsed:hh\:mm\:ss}");
+        AnsiConsole.MarkupLine(@$"Current coding session duration: [olive]{stopwatch.Elapsed:hh\:mm\:ss}[/]");
         AnsiConsole.WriteLine();
-        AnsiConsole.WriteLine("Press any key to stop the session...");
+        AnsiConsole.MarkupLine("Press any [blue]key[/] to stop the session...");
 
         // Stop the cursor flashing every update.
         Console.CursorVisible = false;
@@ -47,9 +49,12 @@ internal class LiveCodingSessionPage : BasePage
             {
                 lastUpdate = stopwatch.Elapsed;
                 Console.SetCursorPosition(0, stopwatchDisplayRow);
-                AnsiConsole.WriteLine(@$"Current coding session duration: {stopwatch.Elapsed:hh\:mm\:ss}");
+                AnsiConsole.MarkupLine(@$"Current coding session duration: [olive]{stopwatch.Elapsed:hh\:mm\:ss}[/]");
             }
         }
+
+        // Read the key press (Stops messing up the next Console.ReadKey() press).
+        Console.ReadKey();
 
         // Stop timer.
         stopwatch.Stop();

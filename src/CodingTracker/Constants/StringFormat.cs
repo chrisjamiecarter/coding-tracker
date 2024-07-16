@@ -5,11 +5,11 @@
 /// </summary>
 public static class StringFormat
 {
-    public static string Date = "yyyy-MM-dd";
+    public static readonly string Date = "yyyy-MM-dd";
     
-    public static string DateTime = "yyyy-MM-dd HH:mm";
+    public static readonly string DateTime = "yyyy-MM-dd HH:mm";
 
-    public static string Year = "yyyy";
+    public static readonly string Year = "yyyy";
 
-    public static string YearMonth = "yyyy-MM";
+    public static readonly string YearMonth = "yyyy-MM";
 }

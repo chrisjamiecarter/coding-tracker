@@ -39,7 +39,21 @@ This is a simple demo console application that allows a user to perform CRUD ope
 
 ## Features
 
-TODO
+- **Recording**
+ 
+	Add a new manual coding session entry in the database. Or, use the live session feature to record as you code and track your time and progress.
+
+- **Reporting**:
+
+	View all coding sessions entries from the database, and displays them and the total and average durations in the console. Or, filter a coding session report by date range, group by day, week, month, year, and order by ascending or descending.
+
+- **Management**
+
+	Update or delete coding session entries in the database.
+
+- **Database Seeding**
+
+	Set `SeedDatabase` to `true` in the appsettings.json file if you wish to generate mocked up seed data on initial database creation.
 
 ## Getting Started
 
@@ -66,15 +80,76 @@ TODO
 
 ## Usage
 
-TODO
+**Main Menu**
+
+When you start the application, you will be presented with the main menu:
+
+![coding tracker main menu](./_resources/coding-tracker-main-menu.png)
+Choose an option from the choices to perform.
+
+**Live Coding Session**
+
+Start live coding session will prompt the user to start and stop a live coding session. A timer will show and track progress:
+
+![coding tracker live session](./_resources/coding-tracker-live-session.png)
+Press any key to start, and stop the session. A message page will appear once the session has been added to the database.
+
+**View Coding Session Report**
+
+Returns all CodingSessions from the database in a raw view. Shows the total and average durations below the table:
+
+![coding tracker coding session report top](./_resources/coding-tracker-coding-session-report-top.png)
+![coding tracker coding session report bottom](./_resources/coding-tracker-coding-session-report-bottom.png)
+Press any key to return to the main menu.
+
+**Filter Coding Session Report**
+
+Allows the user to filter a CodingSessions report. Also shows the total and average durations for the filtered report below the table:
+
+![coding tracker filter coding session report type](./_resources/coding-tracker-filter-report-type.png)
+![coding tracker filter coding session report range](./_resources/coding-tracker-filter-report-range.png)
+![coding tracker filter coding session report](./_resources/coding-tracker-filter-report.png)
+Press any key to return to the main menu.
+
+**Create Coding Session**
+
+Allows the user to add a manual CodingSession to the database. Inputs must be in the correct format and valid. End date must be after the start date:
+
+![coding tracker create coding session](./_resources/coding-tracker-create-coding-session.png)
+A message page will appear once the session has been added to the database.
+
+**Update Coding Session**
+
+Allows the user to choose a CodingSession to be updated in the database. Then prompts for the updated values. Again, inputs must be in the correct format and valid. End date must be after the start date:
+
+![coding tracker update coding session](./_resources/coding-tracker-update-coding-session.png)
+A message page will appear once the session has been updated in the database.
+
+**Delete Coding Session**
+
+Allows the user to choose a CodingSession to be deleted in the database:
+
+![coding tracker delete coding session](./_resources/coding-tracker-delete-coding-session.png)
+A message page will appear once the session has been deleted from the database.
+
+**Set Coding Goal**
+
+Allows the user to set a CodingGoal:
+
+![coding tracker set coding goal](./_resources/coding-tracker-set-coding-goal.png)
+A message page will appear once the goal has been set in the database.
 
 ## How It Works
 
-TODO
+- **Console Application**: Display is mostly through the [Spectre Console](https://spectreconsole.net/) library.
+- **Menu Navigation**: Navigate the application through the Selection Prompts class provided by Spectre to perform actions.
+- **Data Storage**: A new sqlite database is created and the required schema is set up at run-time, or an existing database is used if previously created.
+- **Data Seeding**: If the associated configuration setting is set and there are no CodingSessions in the database, a set of 100 mock objects will be added.
+- **Report Display**: Uses the Tables class  provided by Spectre to display structured and formatted tables.
 
 ## Database
 
-TODO
+![coding tracker entity relationship diagram](./_resources/coding-tracker-entity-relationship-diagram.png)
 
 ## Contributing
 

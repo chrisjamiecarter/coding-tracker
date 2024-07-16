@@ -23,6 +23,20 @@ internal class MessagePage : BasePage
         Console.ReadKey();
     }
 
+    internal static void Show(string title, Exception exception)
+    {
+        AnsiConsole.Clear();
+
+        WriteHeader(title);
+
+        AnsiConsole.WriteException(exception, ExceptionFormats.NoStackTrace);
+
+        WriteFooter();
+
+        // Await user confirmation to continue.
+        Console.ReadKey();
+    }
+
     internal static void Show(string title, Table table)
     {
         AnsiConsole.Clear();

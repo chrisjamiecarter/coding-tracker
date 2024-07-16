@@ -1,12 +1,15 @@
-﻿using CodingTracker.ConsoleApp.Constants;
-using CodingTracker.ConsoleApp.Enums;
+﻿using CodingTracker.ConsoleApp.Enums;
 using CodingTracker.ConsoleApp.Models;
 using CodingTracker.Constants;
 using CodingTracker.Controllers;
+using CodingTracker.Services;
 using Spectre.Console;
 
 namespace CodingTracker.ConsoleApp.Views;
 
+/// <summary>
+/// The main menu page of the application.
+/// </summary>
 internal class MainMenuPage : BasePage
 {
     #region Constants
@@ -18,6 +21,7 @@ internal class MainMenuPage : BasePage
 
     private readonly CodingSessionController _codingSessionController;
     private readonly CodingGoalController _codingGoalController;
+    private readonly CodingGoalProgressService _codingGoalProgressService;
 
     #endregion
     #region Constructors
@@ -26,23 +30,24 @@ internal class MainMenuPage : BasePage
     {
         _codingSessionController = codingSessionController;
         _codingGoalController = codingGoalController;
+        _codingGoalProgressService = new(_codingSessionController, _codingGoalController);
     }
 
     #endregion
     #region Properties
 
-    internal static IEnumerable<PromptChoice> PageOptions
+    internal static IEnumerable<UserChoice> PageChoices
     {
         get
         {
             return
             [
-                new(5, "Start live coding session"),
-                new(1, "View coding sessions report"),
-                new(6, "Filter coding sessions report"),
-                new(2, "Create coding session record"),
-                new(3, "Update coding session record"),
-                new(4, "Delete coding session record"),
+                new(1, "Start live coding session"),
+                new(2, "View coding sessions report"),
+                new(3, "Filter coding sessions report"),
+                new(4, "Create coding session record"),
+                new(5, "Update coding session record"),
+                new(6, "Delete coding session record"),
                 new(7, "Set coding goal"),
                 new(0, "Close application")
             ];
@@ -50,7 +55,7 @@ internal class MainMenuPage : BasePage
     }
 
     #endregion
-    #region Methods
+    #region Methods - Internal
 
     internal void Show()
     {
@@ -62,12 +67,12 @@ internal class MainMenuPage : BasePage
 
             WriteHeader(PageTitle);
 
-            WriteCodingGoal();
+            WriteCodingGoalProgress();
 
             var option = AnsiConsole.Prompt(
-                new SelectionPrompt<PromptChoice>()
-                .Title(Prompt.Title)
-                .AddChoices(PageOptions)
+                new SelectionPrompt<UserChoice>()
+                .Title(PromptTitle)
+                .AddChoices(PageChoices)
                 .UseConverter(c => c.Name!)
                 );
 
@@ -75,51 +80,104 @@ internal class MainMenuPage : BasePage
         }
     }
 
-    private void WriteCodingGoal()
+    #endregion
+    #region Methods - Private
+
+    private void CreateCodingSession()
     {
-        var progress = GetCodingGoalProgress();
-        AnsiConsole.WriteLine($"Welcome, {progress}");
-        AnsiConsole.WriteLine();
+        // Get required data.
+        var codingSession = CreateCodingSessionPage.Show();
+
+        // If nothing is returned, user has opted to not commit.
+        if (codingSession == null)
+        {
+            return;
+        }
+
+        // Commit to database.
+        _codingSessionController.AddCodingSession(codingSession.StartTime, codingSession.EndTime);
+
+        // Display output.
+        MessagePage.Show("Create Coding Session", $"Coding session created successfully.");
     }
 
-    public string GetCodingGoalProgress()
+    private void DeleteCodingSession()
     {
-        var codingGoal = _codingGoalController.GetCodingGoal();
-        if (codingGoal == null || codingGoal.WeeklyDurationInHours == 0)
+        // Get required data.
+        var codingSessions = _codingSessionController.GetCodingSessions();
+
+        // Get coding session to be deleted.
+        var codingSession = DeleteCodingSessionPage.Show(codingSessions);
+
+        // If nothing is returned, user has opted to not commit.
+        if (codingSession == null)
         {
-            return "please set a coding goal for motivation.";
+            return;
         }
 
-        // Lets say a week is Monday - Sunday.
-        var startOfWeek = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek + (int)DayOfWeek.Monday);
-        var endOfWeek = startOfWeek.AddDays(7).AddTicks(-1);
+        // Commit to database.
+        _codingSessionController.DeleteCodingSession(codingSession.Id);
 
-        // Get the total duration spent this week.
-        var codingSessions = _codingSessionController.GetCodingSessions().Where(w => w.StartTime >= startOfWeek && w.EndTime <= endOfWeek);
-        double totalDuration = codingSessions.Sum(x => x.Duration);
-
-        // Get difference
-        double difference = codingGoal.WeeklyDurationInHours - totalDuration;
-
-        // Goal Reached?
-        if (difference <= 0)
-        {
-            return $"you have reached your weekly coding goal. Well done!";
-        }
-        else if (difference < 0)
-        {
-            return $"you are {Math.Abs(difference):F2} hours over your weekly coding goal. Well done!";
-        }
-
-        // Get required.
-        var daysRemaining = (endOfWeek.Date - DateTime.Today).Days;
-        var averagePerDay = difference / daysRemaining;
-
-        return $"you require {difference:F2} more hours to reach your weekly coding goal. Which is {averagePerDay:F2} hours per day. You can do it!";
+        // Display output.
+        MessagePage.Show("Delete Coding Session", $"Coding session deleted successfully.");
     }
 
+    private void FilterCodingSessionsReport()
+    {
+        // Get raw data.
+        var data = _codingSessionController.GetCodingSessions();
 
-    private PageStatus PerformOption(PromptChoice option)
+        // Get filter.
+        var filter = ReportFilterPage.Show();
+
+        // If nothing is returned, user has opted to not commit.
+        if (filter == null)
+        {
+            return;
+        }
+
+        // Apply filter.
+        var filteredData = filter.Apply(data);
+
+        // Configure table data.
+        string tableTitle = $"Coding Session Report {(filter.StartDate.HasValue && filter.EndDate.HasValue ? $"for range: {filter.StartDate:yyyy-MM-dd} - {filter.EndDate:yyyy-MM-dd}" : "")}";
+        var table = new Table
+        {
+            Title = new TableTitle(tableTitle)
+        };
+        table.AddColumn("Start");
+        table.AddColumn("End");
+        table.AddColumn("Duration");
+
+        foreach (var x in filteredData)
+        {
+            table.AddRow(x.StartDateTimeString, x.EndDateTimeString, x.DurationString);
+        }
+
+        table.Caption = new TableTitle(filteredData.Any()
+            ? $"Total: {filteredData.Sum(x => x.Duration):F2}{Environment.NewLine}Average: {filteredData.Average(x => x.Duration):F2}"
+            : "No coding sessions found.");
+
+        // Fill up window.
+        table.Expand();
+
+        // Display report.
+        MessagePage.Show("Coding Session Report", table);
+    }
+
+    private void LiveCodingSession()
+    {
+        // Get required data.
+        var codingSession = LiveCodingSessionPage.Show();
+
+        // Commit to database.
+        _codingSessionController.AddCodingSession(codingSession.StartTime, codingSession.EndTime);
+
+        // Display output.
+        MessagePage.Show("Live Coding Session", $"Coding session created successfully.");
+    }
+
+    private PageStatus PerformOption(UserChoice option)
     {
         switch (option.Id)
         {
@@ -129,38 +187,38 @@ internal class MainMenuPage : BasePage
                 return PageStatus.Closed;
 
             case 1:
-                // View coding sessions report.
-                ViewCodingSessionsReport();                
+
+                // Start live coding session.
+                LiveCodingSession();
                 break;
 
             case 2:
+                // View coding sessions report.
+                ViewCodingSessionsReport();
+                break;
+
+            case 3:
+
+                // Filter coding sessions report.
+                FilterCodingSessionsReport();
+                break;
+
+            case 4:
 
                 // Create coding session record.
                 CreateCodingSession();
                 break;
 
-            case 3:
+            case 5:
 
                 // Update coding session record.
                 UpdateCodingSession();
                 break;
 
-            case 4:
+            case 6:
 
                 // Delete coding session record.
                 DeleteCodingSession();
-                break;
-
-            case 5:
-
-                // Delete coding session record.
-                LiveCodingSession();
-                break;
-
-            case 6:
-
-                // Filter coding sessions report.
-                FilterCodingSessionsReport();
                 break;
 
             case 7:
@@ -182,9 +240,10 @@ internal class MainMenuPage : BasePage
     {
         // Get coding goal.
         var codingGoal = SetCodingGoalPage.Show();
+
+        // If nothing is returned, user has opted to not commit.
         if (codingGoal == null)
         {
-            // If nothing is returned, user has opted to not commit.
             return;
         }
 
@@ -193,104 +252,6 @@ internal class MainMenuPage : BasePage
 
         // Display output.
         MessagePage.Show("Set Coding Goal", $"Coding goal set successfully.");
-
-    }
-
-    private void ViewCodingSessionsReport()
-    {
-        // Get raw data.
-        var data = _codingSessionController.GetCodingSessions();
-
-        // Configure table data.
-        var table = new Table();
-                
-        table.Title = new TableTitle("Coding Session Report");
-        table.AddColumn("ID");
-        table.AddColumn("Start");
-        table.AddColumn("End");
-        table.AddColumn("Duration");
-
-        foreach (var x in data)
-        {
-            table.AddRow(x.Id.ToString(), x.StartTime.ToString(StringFormat.DateTime), x.EndTime.ToString(StringFormat.DateTime), x.Duration.ToString("F2"));
-        }
-        if (data.Count > 0)
-        {
-            table.Caption = new TableTitle($"Total: {data.Sum(x => x.Duration):F2}{Environment.NewLine}Average: {data.Average(x => x.Duration):F2}");
-        }
-        else
-        {
-            table.Caption = new TableTitle("No coding sessions found.");
-        }
-
-        // Fill up window.
-        table.Expand();
-
-        // Display report.
-        MessagePage.Show("Coding Session Report", table);
-    }
-
-    private void FilterCodingSessionsReport()
-    {
-        // Get raw data.
-        var data = _codingSessionController.GetCodingSessions();
-
-        // Get filter.
-        var filter = ReportFilterPage.Show();
-        if (filter == null)
-        {
-            // If nothing is returned, user has opted to not commit.
-            return;
-        }
-
-        // Apply filter.
-        var filteredData = filter.Apply(data);
-
-        // Configure table data.
-        var table = new Table();
-        string tableTitle = $"Coding Session Report (Type: {filter.Type})";
-        tableTitle += filter.StartDate.HasValue && filter.EndDate.HasValue ? $" Period: {filter.StartDate:yyyy-MM-dd} - {filter.EndDate:yyyy-MM-dd}" : "";
-        table.Title = new TableTitle(tableTitle);
-        table.AddColumn("Start");
-        table.AddColumn("End");
-        table.AddColumn("Duration");
-
-        foreach (var x in filteredData)
-        {
-            //table.AddRow(x.Id.ToString(), x.StartTime.ToString(StringFormat.DateTime), x.EndTime.ToString(StringFormat.DateTime), x.Duration.ToString("F2"));
-            table.AddRow(x.StartDateTimeString, x.EndDateTimeString, x.DurationString);
-        }
-        if (filteredData.Any())
-        {
-            table.Caption = new TableTitle($"Total: {filteredData.Sum(x => x.Duration):F2}{Environment.NewLine}Average: {filteredData.Average(x => x.Duration):F2}");
-        }
-        else
-        {
-            table.Caption = new TableTitle("No coding sessions found.");
-        }
-
-        // Fill up window.
-        table.Expand();
-
-        // Display report.
-        MessagePage.Show("Coding Session Report", table);
-    }
-
-    private void CreateCodingSession()
-    {
-        // Get required data.
-        var codingSession = CreateCodingSessionPage.Show();
-        if (codingSession == null)
-        {
-            // If nothing is returned, user has opted to not commit.
-            return;
-        }
-
-        // Commit to database.
-        _codingSessionController.AddCodingSession(codingSession.StartTime, codingSession.EndTime);
-
-        // Display output.
-        MessagePage.Show("Create Coding Session", $"Coding session created successfully.");
     }
 
     private void UpdateCodingSession()
@@ -300,9 +261,10 @@ internal class MainMenuPage : BasePage
 
         // Get updated coding session.
         var codingSession = UpdateCodingSessionPage.Show(codingSessions);
+
+        // If nothing is returned, user has opted to not commit.
         if (codingSession == null)
         {
-            // If nothing is returned, user has opted to not commit.
             return;
         }
 
@@ -313,36 +275,42 @@ internal class MainMenuPage : BasePage
         MessagePage.Show("Update Coding Session", $"Coding session updated successfully.");
     }
 
-    private void DeleteCodingSession()
+    private void ViewCodingSessionsReport()
     {
-        // Get required data.
-        var codingSessions = _codingSessionController.GetCodingSessions();
+        // Get raw data.
+        var data = _codingSessionController.GetCodingSessions();
 
-        // Get coding session to be deleted.
-        var codingSession = DeleteCodingSessionPage.Show(codingSessions);
-        if (codingSession == null)
+        // Configure table data.
+        var table = new Table
         {
-            // If nothing is returned, user has opted to not commit.
-            return;
+            Title = new TableTitle("Coding Session Report")
+        };
+        table.AddColumn("ID");
+        table.AddColumn("Start");
+        table.AddColumn("End");
+        table.AddColumn("Duration");
+
+        foreach (var x in data)
+        {
+            table.AddRow(x.Id.ToString(), x.StartTime.ToString(StringFormat.DateTime), x.EndTime.ToString(StringFormat.DateTime), x.Duration.ToString("F2"));
         }
 
-        // Commit to database.
-        _codingSessionController.DeleteCodingSession(codingSession.Id);
+        table.Caption = new TableTitle(data.Count > 0
+            ? $"Total: {data.Sum(x => x.Duration):F2}{Environment.NewLine}Average: {data.Average(x => x.Duration):F2}"
+            : "No coding sessions found.");
 
-        // Display output.
-        MessagePage.Show("Delete Coding Session", $"Coding session deleted successfully.");
+        // Fill up window.
+        table.Expand();
+
+        // Display report.
+        MessagePage.Show("Coding Session Report", table);
     }
 
-    private void LiveCodingSession()
+    private void WriteCodingGoalProgress()
     {
-        // Get required data.
-        var codingSession = LiveCodingSessionPage.Show();
-
-        // Commit to database.
-        _codingSessionController.AddCodingSession(codingSession.StartTime, codingSession.EndTime);
-
-        // Display output.
-        MessagePage.Show("Live Coding Session", $"Coding session created successfully.");
+        var progress = _codingGoalProgressService.GetCodingGoalProgress();
+        AnsiConsole.WriteLine($"Welcome, {progress}");
+        AnsiConsole.WriteLine();
     }
 
     #endregion

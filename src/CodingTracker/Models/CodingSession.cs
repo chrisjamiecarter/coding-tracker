@@ -7,6 +7,8 @@ namespace CodingTracker.Models;
 /// </summary>
 public class CodingSession
 {
+    #region Constructors
+
     public CodingSession(CodingSessionEntity entity)
     {
         Id = entity.Id;
@@ -21,6 +23,9 @@ public class CodingSession
         EndTime = endTime;
     }
 
+    #endregion
+    #region Properties
+
     public int Id { get; init; }
 
     public DateTime StartTime { get; init; }
@@ -28,4 +33,6 @@ public class CodingSession
     public DateTime EndTime { get; init; }
 
     public double Duration { get; init; }
+
+    #endregion
 }

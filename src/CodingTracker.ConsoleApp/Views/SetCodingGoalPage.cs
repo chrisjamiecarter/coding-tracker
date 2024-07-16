@@ -1,9 +1,13 @@
-﻿using CodingTracker.Models;
+﻿using CodingTracker.ConsoleApp.Services;
+using CodingTracker.Models;
 using CodingTracker.Services;
 using Spectre.Console;
 
 namespace CodingTracker.ConsoleApp.Views;
 
+/// <summary>
+/// Page which allows users to set a CodingGoal.
+/// </summary>
 internal class SetCodingGoalPage : BasePage
 {
     #region Constants
@@ -19,17 +23,12 @@ internal class SetCodingGoalPage : BasePage
 
         WriteHeader(PageTitle);
 
-        var message = $"Enter you weekly coding goal duration in hours: ";
-        var input = AnsiConsole.Ask<double>(message);
-        var inputValidation = ValidationService.IsValidCodingGoalDuration(input);
-        while (!inputValidation.IsValid)
-        {
-            AnsiConsole.WriteLine(inputValidation.Message);
-            input = AnsiConsole.Ask<double>(message);
-            inputValidation = ValidationService.IsValidCodingGoalDuration(input);
-        }
-        
-        return new CodingGoal(input);
+        double duration = UserInputService.GetDouble(
+            $"Enter your weekly coding goal duration in hours: ",
+            input => UserInputValidationService.IsValidCodingGoalDuration(input)
+            );
+
+        return new CodingGoal(duration);
     }
 
     #endregion

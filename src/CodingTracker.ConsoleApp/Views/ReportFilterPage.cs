@@ -1,14 +1,17 @@
-﻿using CodingTracker.ConsoleApp.Constants;
-using CodingTracker.ConsoleApp.Models;
+﻿using CodingTracker.ConsoleApp.Models;
+using CodingTracker.ConsoleApp.Services;
 using CodingTracker.Constants;
 using CodingTracker.Enums;
 using CodingTracker.Models;
 using CodingTracker.Services;
 using Spectre.Console;
-using System.Globalization;
+using System.Runtime.Serialization;
 
 namespace CodingTracker.ConsoleApp.Views;
 
+/// <summary>
+/// Page which allows users to configure a report filter.
+/// </summary>
 internal class ReportFilterPage : BasePage
 {
     #region Constants
@@ -18,7 +21,7 @@ internal class ReportFilterPage : BasePage
     #endregion
     #region Properties
 
-    internal static IEnumerable<PromptChoice> ReportFilterTypeOptions
+    internal static IEnumerable<UserChoice> ReportFilterTypeChoices
     {
         get
         {
@@ -34,7 +37,7 @@ internal class ReportFilterPage : BasePage
         }
     }
 
-    internal static IEnumerable<PromptChoice> ReportFilterOrderByOptions
+    internal static IEnumerable<UserChoice> ReportFilterOrderByChoices
     {
         get
         {
@@ -42,162 +45,149 @@ internal class ReportFilterPage : BasePage
             [
                 new(1, "Ascending"),
                 new(2, "Descending"),
-                new(0, "Close page")
             ];
         }
     }
 
     #endregion
-    #region Methods: Internal
+    #region Methods - Internal
 
     internal static ReportFilter? Show()
     {
-        ReportFilter? nullReportFilter = null;
-
         AnsiConsole.Clear();
 
         WriteHeader(PageTitle);
 
-        var reportFilterTypeOption = AnsiConsole.Prompt(
-            new SelectionPrompt<PromptChoice>()
-            .Title(Prompt.Title)
-            .AddChoices(ReportFilterTypeOptions)
+        var choice = AnsiConsole.Prompt(
+            new SelectionPrompt<UserChoice>()
+            .Title(PromptTitle)
+            .AddChoices(ReportFilterTypeChoices)
             .UseConverter(c => c.Name!)
             );
 
-        ReportFilterType filterType = ReportFilterType.All;
-        DateTime? startDateTime = null;
-        DateTime? endDateTime = null;
-        ReportOrderByType orderBy = ReportOrderByType.Ascending;
+        // Default values.
+        ReportFilterType filterType = ReportFilterType.Day;
+        DateTime? startDate = null;
+        DateTime? endDate = null;
 
-        switch (reportFilterTypeOption.Id)
+        switch (choice.Id)
         {
-            case 0:
-
-                // Close page.
-                return nullReportFilter;
-
             case 1:
 
                 // All.
                 return new ReportFilter
                 {
                     Type = filterType,
-                    StartDate = startDateTime,
-                    EndDate = endDateTime,
-                    OrderBy = orderBy
+                    StartDate = startDate,
+                    EndDate = endDate,
+                    OrderBy = GetReportOrderByType()
                 };
 
             case 2:
 
                 // By day.
                 filterType = ReportFilterType.Day;
-                startDateTime = GetStartDate(GetDateStringFormat(filterType));
-                if (startDateTime == null)
+                startDate = GetStartDate(GetDateStringFormat(filterType));
+                if (startDate == null)
                 {
-                    return nullReportFilter;
+                    return null;
                 }
-                endDateTime = GetEndDate(GetDateStringFormat(filterType), startDateTime.Value.Date);
-                if (endDateTime == null)
-                { 
-                    return nullReportFilter;
+                endDate = GetEndDate(GetDateStringFormat(filterType), startDate.Value.Date);
+                if (endDate == null)
+                {
+                    return null;
                 }
-                endDateTime = endDateTime.Value.AddDays(1).AddTicks(-1);
-                break;
+                endDate = endDate.Value.AddDays(1).AddTicks(-1);
+
+                return new ReportFilter
+                {
+                    Type = filterType,
+                    StartDate = startDate,
+                    EndDate = endDate,
+                    OrderBy = GetReportOrderByType()
+                };
 
             case 3:
 
                 // By week.
                 filterType = ReportFilterType.Week;
-                startDateTime = GetStartDate(GetDateStringFormat(filterType));
-                if (startDateTime == null)
+                startDate = GetStartDate(GetDateStringFormat(filterType));
+                if (startDate == null)
                 {
-                    return nullReportFilter;
+                    return null;
                 }
-                endDateTime = GetEndDate(GetDateStringFormat(filterType), startDateTime.Value.Date);
-                if (endDateTime == null)
+                endDate = GetEndDate(GetDateStringFormat(filterType), startDate.Value.Date);
+                if (endDate == null)
                 {
-                    return nullReportFilter;
+                    return null;
                 }
-                endDateTime = endDateTime.Value.AddDays(1).AddTicks(-1);
-                break;
+                endDate = endDate.Value.AddDays(1).AddTicks(-1);
+
+                return new ReportFilter
+                {
+                    Type = filterType,
+                    StartDate = startDate,
+                    EndDate = endDate,
+                    OrderBy = GetReportOrderByType()
+                };
 
             case 4:
 
                 // By month.
                 filterType = ReportFilterType.Month;
-                startDateTime = GetStartDate(GetDateStringFormat(filterType));
-                if (startDateTime == null)
+                startDate = GetStartDate(GetDateStringFormat(filterType));
+                if (startDate == null)
                 {
-                    return nullReportFilter;
+                    return null;
                 }
-                endDateTime = GetEndDate(GetDateStringFormat(filterType), startDateTime.Value.Date);
-                if (endDateTime == null)
+                endDate = GetEndDate(GetDateStringFormat(filterType), startDate.Value.Date);
+                if (endDate == null)
                 {
-                    return nullReportFilter;
+                    return null;
                 }
-                endDateTime = endDateTime.Value.AddMonths(1).AddTicks(-1);
-                break;
+                endDate = endDate.Value.AddMonths(1).AddTicks(-1);
+                
+                return new ReportFilter
+                {
+                    Type = filterType,
+                    StartDate = startDate,
+                    EndDate = endDate,
+                    OrderBy = GetReportOrderByType()
+                };
 
             case 5:
 
                 // By year.
                 filterType = ReportFilterType.Year;
-                startDateTime = GetStartDate(GetDateStringFormat(filterType));
-                if (startDateTime == null)
+                startDate = GetStartDate(GetDateStringFormat(filterType));
+                if (startDate == null)
                 {
-                    return nullReportFilter;
+                    return null;
                 }
-                endDateTime = GetEndDate(GetDateStringFormat(filterType), startDateTime.Value.Date);
-                if (endDateTime == null)
+                endDate = GetEndDate(GetDateStringFormat(filterType), startDate.Value.Date);
+                if (endDate == null)
                 {
-                    return nullReportFilter;
+                    return null;
                 }
-                endDateTime = endDateTime.Value.AddYears(1).AddTicks(-1);
-                break;
+                endDate = endDate.Value.AddYears(1).AddTicks(-1);
+
+                return new ReportFilter
+                {
+                    Type = filterType,
+                    StartDate = startDate,
+                    EndDate = endDate,
+                    OrderBy = GetReportOrderByType()
+                };
 
             default:
-                return nullReportFilter;
-        }
-
-        var reportFilterOrderByOption = AnsiConsole.Prompt(
-            new SelectionPrompt<PromptChoice>()
-            .Title(Prompt.Title)
-            .AddChoices(ReportFilterOrderByOptions)
-            .UseConverter(c => c.Name!)
-        );
-
-        switch (reportFilterOrderByOption.Id)
-        {
-            case 0:
 
                 // Close page.
-                return nullReportFilter;
-
-            case 1:
-
-                // Ascending.
-                orderBy = ReportOrderByType.Ascending;
-                break;
-
-            case 2:
-
-                // Descending.
-                orderBy = ReportOrderByType.Descending;
-                break;
-
-            default:
-                return nullReportFilter;
+                return null;
         }
-
-        return new ReportFilter
-        {
-            Type = filterType,
-            StartDate = startDateTime,
-            EndDate = endDateTime,
-            OrderBy = orderBy
-        };
     }
+
+    #endregion
+    #region Methods - Private
 
     private static string GetDateStringFormat(ReportFilterType filterType)
     {
@@ -212,40 +202,43 @@ internal class ReportFilterPage : BasePage
         };
     }
 
-    private static DateTime? GetStartDate(string dateStringFormat)
+    private static DateTime? GetStartDate(string format)
     {
-        var startMessage = $"Enter the start date, format '{dateStringFormat}', or 0 to return to main menu: ";
-        var startInput = AnsiConsole.Ask<string>(startMessage);
-        var startInputValidation = ValidationService.IsValidReportStartDate(startInput, dateStringFormat);
-        while (!startInputValidation.IsValid)
-        {
-            if (startInput == "0")
-            {
-                return null;
-            }
-            AnsiConsole.WriteLine(startInputValidation.Message);
-            startInput = AnsiConsole.Ask<string>(startMessage);
-            startInputValidation = ValidationService.IsValidReportStartDate(startInput, dateStringFormat);
-        }
-        return DateTime.ParseExact(startInput, dateStringFormat, CultureInfo.InvariantCulture, DateTimeStyles.None);
+        DateTime? start = UserInputService.GetDateTime(
+            $"Enter the start date, format [blue]{format}[/], or [blue]0[/] to return to main menu: ",
+            format,
+            input => UserInputValidationService.IsValidReportStartDate(input, format)
+        );
+
+        return start == null ? null : start;
     }
 
-    private static DateTime? GetEndDate(string dateStringFormat, DateTime startDate)
+    private static DateTime? GetEndDate(string format, DateTime startDate)
     {
-        var endMessage = $"Enter the end date, format '{dateStringFormat}', or 0 to return to main menu: ";
-        var endInput = AnsiConsole.Ask<string>(endMessage);
-        var endInputValidation = ValidationService.IsValidReportEndDate(endInput, dateStringFormat, startDate);
-        while (!endInputValidation.IsValid)
+        DateTime? end = UserInputService.GetDateTime(
+            $"Enter the end date, format [blue]{format}[/], or [blue]0[/] to return to main menu: ",
+            format,
+            input => UserInputValidationService.IsValidReportEndDate(input, format, startDate)
+            );
+
+        return end == null ? null : end;
+    }
+
+    private static ReportOrderByType GetReportOrderByType()
+    {
+        var choice = AnsiConsole.Prompt(
+            new SelectionPrompt<UserChoice>()
+            .Title(PromptTitle)
+            .AddChoices(ReportFilterOrderByChoices)
+            .UseConverter(c => c.Name!)
+        );
+
+        return choice.Id switch
         {
-            if (endInput == "0")
-            {
-                return null;
-            }
-            AnsiConsole.WriteLine(endInputValidation.Message);
-            endInput = AnsiConsole.Ask<string>(endMessage);
-            endInputValidation = ValidationService.IsValidReportEndDate(endInput, dateStringFormat, startDate);
-        }
-        return DateTime.ParseExact(endInput, dateStringFormat, CultureInfo.InvariantCulture, DateTimeStyles.None);
+            1 => ReportOrderByType.Ascending,
+            2 => ReportOrderByType.Descending,
+            _ => throw new ArgumentException("Unsupported ReportOrderByType"),
+        };
     }
 
     #endregion
