@@ -144,6 +144,7 @@ A message page will appear once the goal has been set in the database.
 - **Console Application**: Display is mostly through the [Spectre Console](https://spectreconsole.net/) library.
 - **Menu Navigation**: Navigate the application through the Selection Prompts class provided by Spectre to perform actions.
 - **Data Storage**: A new sqlite database is created and the required schema is set up at run-time, or an existing database is used if previously created.
+- **Data Access**: [Dapper](https://github.com/DapperLib/Dapper) is used for the database access methods.
 - **Data Seeding**: If the associated configuration setting is set and there are no CodingSessions in the database, a set of 100 mock objects will be added.
 - **Report Display**: Uses the Tables class  provided by Spectre to display structured and formatted tables.
 

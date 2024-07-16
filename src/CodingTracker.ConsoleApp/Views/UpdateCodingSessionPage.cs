@@ -45,8 +45,11 @@ internal class UpdateCodingSessionPage : BasePage
         var option = GetOption(codingSessions);
         
         // Close page.
-        if (option.Id == 0) return null;
-    
+        if (option.Id == 0)
+        {
+            return null;
+        }
+
         // Get the updated CodingSession from user input.
         var codingSession = codingSessions.First(x => x.Id == option.Id);
         codingSession = GetUpdatedCodingSession(codingSession);
@@ -77,7 +80,10 @@ internal class UpdateCodingSessionPage : BasePage
         );
 
         // If nothing is returned, user has opted to not commit.
-        if (start == null) return null;
+        if (start == null)
+        {
+            return null;
+        }
 
         // Get the end date time of the CodingSession.
         DateTime? end = UserInputService.GetDateTime(
@@ -87,7 +93,10 @@ internal class UpdateCodingSessionPage : BasePage
             );
 
         // If nothing is returned, user has opted to not commit.
-        if (end == null) return null;
+        if (end == null)
+        {
+            return null;
+        }
 
         // Start and end contain values, return new CodingSession.
         return new CodingSession(start.Value, end.Value)
