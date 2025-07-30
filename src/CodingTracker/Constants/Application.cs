@@ -1,4 +1,4 @@
-﻿namespace HabitTracker.Constants;
+﻿namespace CodingTracker.Constants;
 
 /// <summary>
 /// Any application constants required by the Core project.

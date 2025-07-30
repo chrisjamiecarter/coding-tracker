@@ -1,4 +1,4 @@
-﻿using HabitTracker.Constants;
+﻿using CodingTracker.Constants;
 using Spectre.Console;
 using System.Text;
 
