@@ -10,8 +10,6 @@ namespace CodingTracker.Data.Managers;
 /// </summary>
 public partial class SqliteDataManager
 {
-    #region Constants
-
     private static readonly string AddCodingGoalQuery =
         @"
         INSERT OR IGNORE INTO CodingGoal 
@@ -46,9 +44,6 @@ public partial class SqliteDataManager
             Id = 1
         ;";
 
-    #endregion
-    #region Methods
-
     public void AddCodingGoal()
     {
         using var connection = new SQLiteConnection(ConnectionString);
@@ -74,6 +69,4 @@ public partial class SqliteDataManager
         connection.Open();
         connection.Execute(SetCodingGoalQuery, parameters);
     }
-
-    #endregion
 }

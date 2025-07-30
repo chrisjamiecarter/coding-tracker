@@ -8,20 +8,12 @@ namespace CodingTracker.Controllers;
 /// </summary>
 public class CodingSessionController
 {
-    #region Fields
-
     private readonly SqliteDataManager _dataManager;
-
-    #endregion
-    #region Constructors
 
     public CodingSessionController(string databaseConnectionString)
     {
         _dataManager = new SqliteDataManager(databaseConnectionString);
     }
-
-    #endregion
-    #region Methods - Public
 
     public void AddCodingSession(DateTime startTime, DateTime endTime)
     {
@@ -62,9 +54,6 @@ public class CodingSessionController
         _dataManager.SetCodingSession(codingSessionId, startTime, endTime, duration);
     }
 
-    #endregion
-    #region Methods - Private
-
     /// <summary>
     /// Requirement: Do not let user enter duration. Must be calculated in the CodingSessionController.
     /// </summary>
@@ -75,6 +64,4 @@ public class CodingSessionController
     {
         return (endTime - startTime).TotalHours;
     }
-
-    #endregion
 }

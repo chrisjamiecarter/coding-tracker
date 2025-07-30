@@ -11,12 +11,7 @@ namespace CodingTracker.ConsoleApp.Views;
 /// </summary>
 internal class CreateCodingSessionPage : BasePage
 {
-    #region Constants
-
     private const string PageTitle = "Create Coding Session";
-
-    #endregion
-    #region Methods
 
     internal static CodingSession? Show()
     {
@@ -56,6 +51,4 @@ internal class CreateCodingSessionPage : BasePage
         // Start and end contain values, return new CodingSession.
         return new CodingSession(start.Value, end.Value);
     }
-
-    #endregion
 }

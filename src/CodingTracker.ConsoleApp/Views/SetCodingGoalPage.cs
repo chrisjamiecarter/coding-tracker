@@ -10,13 +10,8 @@ namespace CodingTracker.ConsoleApp.Views;
 /// </summary>
 internal class SetCodingGoalPage : BasePage
 {
-    #region Constants
-
     private const string PageTitle = "Set Coding Goal";
     
-    #endregion
-    #region Methods: Internal
-
     internal static CodingGoal Show()
     {
         AnsiConsole.Clear();
@@ -30,6 +25,4 @@ internal class SetCodingGoalPage : BasePage
 
         return new CodingGoal(duration);
     }
-
-    #endregion
 }

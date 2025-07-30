@@ -10,8 +10,6 @@ namespace CodingTracker.Data.Managers;
 /// </summary>
 public partial class SqliteDataManager
 {
-    #region Constants
-
     private static readonly string AddCodingSessionQuery =
         @"
         INSERT INTO CodingSession
@@ -65,9 +63,6 @@ public partial class SqliteDataManager
         WHERE
             Id = $Id
         ;";
-
-    #endregion
-    #region Methods
 
     public void AddCodingSession(DateTime start, DateTime end, double duration)
     {
@@ -128,6 +123,4 @@ public partial class SqliteDataManager
         connection.Open();
         connection.Execute(SetCodingSessionQuery, parameters);
     }
-
-    #endregion
 }

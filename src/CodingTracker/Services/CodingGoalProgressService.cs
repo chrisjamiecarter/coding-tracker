@@ -7,22 +7,14 @@ namespace CodingTracker.Services;
 /// </summary>
 public class CodingGoalProgressService
 {
-    #region Fields
-
     private readonly CodingSessionController _codingSessionController;
     private readonly CodingGoalController _codingGoalController;
-    
-    #endregion
-    #region Constructors
 
     public CodingGoalProgressService(CodingSessionController codingSessionController, CodingGoalController codingGoalController)
     {
         _codingSessionController = codingSessionController;
         _codingGoalController = codingGoalController;
     }
-
-    #endregion
-    #region Methods
 
     public string GetCodingGoalProgress()
     {
@@ -59,6 +51,4 @@ public class CodingGoalProgressService
 
         return $"you require {difference:F2} more hours to reach your weekly coding goal. Which is {averagePerDay:F2} hours per day. You can do it!";
     }
-
-    #endregion
 }

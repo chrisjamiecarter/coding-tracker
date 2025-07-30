@@ -7,8 +7,6 @@ namespace CodingTracker.ConsoleApp.Extensions;
 /// </summary>
 public static class NameValueCollectionExtensions
 {
-    #region Methods
-
     public static bool GetBoolean(this NameValueCollection collection, string key)
     {
         string? value = collection.Get(key);
@@ -37,6 +35,4 @@ public static class NameValueCollectionExtensions
 
         return value;
     }
-
-    #endregion
 }

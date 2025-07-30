@@ -10,12 +10,7 @@ namespace CodingTracker.ConsoleApp.Views;
 /// </summary>
 internal class DeleteCodingSessionPage : BasePage
 {
-    #region Constants
-
     private const string PageTitle = "Delete Coding Session";
-
-    #endregion
-    #region Properties
 
     internal static IEnumerable<UserChoice> PageChoices
     {
@@ -28,9 +23,6 @@ internal class DeleteCodingSessionPage : BasePage
         }
     }
 
-    #endregion
-    #region Methods - Internal
-
     internal static CodingSession? Show(List<CodingSession> codingSessions)
     {
         AnsiConsole.Clear();
@@ -41,9 +33,6 @@ internal class DeleteCodingSessionPage : BasePage
 
         return option.Id == 0 ? null : codingSessions.First(x => x.Id == option.Id);
     }
-
-    #endregion
-    #region Methods - Private
 
     private static UserChoice GetOption(List<CodingSession> codingSessions)
     {
@@ -57,6 +46,4 @@ internal class DeleteCodingSessionPage : BasePage
                 .UseConverter(c => c.Name!)
                 );
     }
-
-    #endregion
 }

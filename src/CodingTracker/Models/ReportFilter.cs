@@ -8,18 +8,10 @@ namespace CodingTracker.Models;
 /// </summary>
 public class ReportFilter
 {
-    #region Properties
-
     public ReportFilterType Type { get; set; }
-
     public DateTime? StartDate { get; set; }
-
     public DateTime? EndDate { get; set; }
-
     public ReportOrderByType OrderBy { get; set; }
-
-    #endregion
-    #region Methods
 
     public IEnumerable<CodingSessionReport> Apply(IEnumerable<CodingSession> items)
     {
@@ -58,6 +50,4 @@ public class ReportFilter
         // Return output.
         return orderedItems;
     }
-
-    #endregion
 }

@@ -8,8 +8,6 @@ namespace CodingTracker.ConsoleApp;
 
 internal class Program
 {
-    #region Methods
-
     /// <summary>
     /// Main insertion point of the program.
     /// Gets config settings and launches the main menu.
@@ -53,6 +51,4 @@ internal class Program
             Environment.Exit(0);
         }
     }
-
-    #endregion
 }

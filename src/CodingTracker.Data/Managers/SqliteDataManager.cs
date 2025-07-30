@@ -8,8 +8,6 @@ namespace CodingTracker.Data.Managers;
 /// </summary>
 public partial class SqliteDataManager
 {
-    #region Constants
-
     private static readonly string CreateTableCodingSessionQuery =
         @"
         CREATE TABLE IF NOT EXISTS CodingSession
@@ -30,14 +28,6 @@ public partial class SqliteDataManager
         )
         ;";
 
-    #endregion
-    #region Properties
-
-    public string ConnectionString { get; init; }
-
-    #endregion
-    #region Constructors
-
     public SqliteDataManager(string connectionString)
     {
         ConnectionString = connectionString;
@@ -45,8 +35,7 @@ public partial class SqliteDataManager
         Initialise();
     }
 
-    #endregion
-    #region Methods
+    public string ConnectionString { get; init; }
 
     private void CreateTableCodingSession()
     {
@@ -69,6 +58,4 @@ public partial class SqliteDataManager
         CreateTableCodingGoal();
         AddCodingGoal();
     }
-
-    #endregion
 }

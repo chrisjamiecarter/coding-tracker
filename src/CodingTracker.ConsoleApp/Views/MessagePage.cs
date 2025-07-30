@@ -7,8 +7,6 @@ namespace CodingTracker.ConsoleApp.Views;
 /// </summary>
 internal class MessagePage : BasePage
 {
-    #region Methods: Internal
-
     internal static void Show(string title, string message)
     {
         AnsiConsole.Clear();
@@ -50,6 +48,4 @@ internal class MessagePage : BasePage
         // Await user confirmation to continue.
         Console.ReadKey();
     }
-
-    #endregion
 }

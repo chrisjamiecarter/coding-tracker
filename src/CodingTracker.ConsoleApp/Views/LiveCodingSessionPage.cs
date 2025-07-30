@@ -9,12 +9,7 @@ namespace CodingTracker.ConsoleApp.Views;
 /// </summary>
 internal class LiveCodingSessionPage : BasePage
 {
-    #region Constants
-
     private const string PageTitle = "Live Coding Session";
-
-    #endregion
-    #region Methods: Internal
 
     internal static CodingSession Show()
     {
@@ -62,6 +57,4 @@ internal class LiveCodingSessionPage : BasePage
 
         return new CodingSession(start, end);
     }
-
-    #endregion
 }

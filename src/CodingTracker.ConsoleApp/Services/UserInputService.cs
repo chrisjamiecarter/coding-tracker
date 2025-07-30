@@ -43,5 +43,4 @@ internal static class UserInputService
             AnsiConsole.WriteLine(validationResult.Message);
         }
     }
-
 }

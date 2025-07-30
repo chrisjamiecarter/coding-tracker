@@ -8,8 +8,6 @@ namespace CodingTracker.Services;
 /// </summary>
 public static class UserInputValidationService
 {
-    #region Methods
-
     /// <summary>
     /// Performs validation on a CodingGoal user input .
     /// </summary>
@@ -135,6 +133,4 @@ public static class UserInputValidationService
 
         return new UserInputValidationResult(true, "Validation successful");
     }
-
-    #endregion
 }

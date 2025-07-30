@@ -6,20 +6,12 @@
 /// </summary>
 public class UserInputValidationResult
 {
-    #region Constructors
-
     public UserInputValidationResult(bool isValid, string message)
     {
         IsValid = isValid;
         Message = message;
     }
 
-    #endregion
-    #region Properties
-
     public bool IsValid { get; init; } = false;
-
     public string Message { get; init; } = "";
-
-    #endregion
 }

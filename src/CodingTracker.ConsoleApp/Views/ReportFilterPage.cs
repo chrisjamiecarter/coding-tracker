@@ -13,12 +13,7 @@ namespace CodingTracker.ConsoleApp.Views;
 /// </summary>
 internal class ReportFilterPage : BasePage
 {
-    #region Constants
-
     private const string PageTitle = "Filter Report";
-
-    #endregion
-    #region Properties
 
     internal static IEnumerable<UserChoice> ReportFilterTypeChoices
     {
@@ -47,9 +42,6 @@ internal class ReportFilterPage : BasePage
             ];
         }
     }
-
-    #endregion
-    #region Methods - Internal
 
     internal static ReportFilter? Show()
     {
@@ -185,9 +177,6 @@ internal class ReportFilterPage : BasePage
         }
     }
 
-    #endregion
-    #region Methods - Private
-
     private static string GetDateStringFormat(ReportFilterType filterType)
     {
         return filterType switch
@@ -239,6 +228,4 @@ internal class ReportFilterPage : BasePage
             _ => throw new ArgumentException("Unsupported ReportOrderByType"),
         };
     }
-
-    #endregion
 }

@@ -8,20 +8,12 @@ namespace CodingTracker.Controllers;
 /// </summary>
 public class CodingGoalController
 {
-    #region Fields
-
     private readonly SqliteDataManager _dataManager;
-
-    #endregion
-    #region Constructors
 
     public CodingGoalController(string databaseConnectionString)
     {
         _dataManager = new SqliteDataManager(databaseConnectionString);
     }
-
-    #endregion
-    #region Methods
 
     public CodingGoal GetCodingGoal()
     {
@@ -33,6 +25,4 @@ public class CodingGoalController
     {
         _dataManager.SetCodingGoal(weeklyDurationInHours);
     }
-
-    #endregion
 }

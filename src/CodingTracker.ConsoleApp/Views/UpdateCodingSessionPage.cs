@@ -12,14 +12,8 @@ namespace CodingTracker.ConsoleApp.Views;
 /// </summary>
 internal class UpdateCodingSessionPage : BasePage
 {
-    #region Constants
-
     private const string PageTitle = "Update Coding Session";
-
     private const string PromptTitle = "Select an option...";
-
-    #endregion
-    #region Properties
 
     internal static IEnumerable<UserChoice> PageChoices
     {
@@ -31,9 +25,6 @@ internal class UpdateCodingSessionPage : BasePage
             ];
         }
     }
-
-    #endregion
-    #region Methods - Internal
 
     internal static CodingSession? Show(List<CodingSession> codingSessions)
     {
@@ -104,9 +95,6 @@ internal class UpdateCodingSessionPage : BasePage
         };
     }
 
-    #endregion
-    #region Methods - Private
-
     private static UserChoice GetOption(List<CodingSession> codingSessions)
     {
         // Add the coding sessions to the existing PageChoices.
@@ -119,6 +107,4 @@ internal class UpdateCodingSessionPage : BasePage
                 .UseConverter(c => c.Name!)
                 );
     }
-
-    #endregion
 }

@@ -12,19 +12,11 @@ namespace CodingTracker.ConsoleApp.Views;
 /// </summary>
 internal class MainMenuPage : BasePage
 {
-    #region Constants
-
     private const string PageTitle = "Main Menu";
-
-    #endregion
-    #region Fields
 
     private readonly CodingSessionController _codingSessionController;
     private readonly CodingGoalController _codingGoalController;
     private readonly CodingGoalProgressService _codingGoalProgressService;
-
-    #endregion
-    #region Constructors
 
     public MainMenuPage(CodingSessionController codingSessionController, CodingGoalController codingGoalController)
     {
@@ -32,9 +24,6 @@ internal class MainMenuPage : BasePage
         _codingGoalController = codingGoalController;
         _codingGoalProgressService = new(_codingSessionController, _codingGoalController);
     }
-
-    #endregion
-    #region Properties
 
     internal static IEnumerable<UserChoice> PageChoices
     {
@@ -53,9 +42,6 @@ internal class MainMenuPage : BasePage
             ];
         }
     }
-
-    #endregion
-    #region Methods - Internal
 
     internal void Show()
     {
@@ -79,9 +65,6 @@ internal class MainMenuPage : BasePage
             status = PerformOption(option);
         }
     }
-
-    #endregion
-    #region Methods - Private
 
     private void CreateCodingSession()
     {
@@ -312,6 +295,4 @@ internal class MainMenuPage : BasePage
         AnsiConsole.WriteLine($"Welcome, {progress}");
         AnsiConsole.WriteLine();
     }
-
-    #endregion
 }
