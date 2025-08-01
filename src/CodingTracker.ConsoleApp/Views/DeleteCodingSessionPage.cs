@@ -25,8 +25,6 @@ internal class DeleteCodingSessionPage : BasePage
 
     internal static CodingSession? Show(List<CodingSession> codingSessions)
     {
-        AnsiConsole.Clear();
-
         WriteHeader(PageTitle);
 
         var option = GetOption(codingSessions);

@@ -9,8 +9,6 @@ internal class MessagePage : BasePage
 {
     internal static void Show(string title, string message)
     {
-        AnsiConsole.Clear();
-
         WriteHeader(title);
 
         AnsiConsole.WriteLine(message);
@@ -23,8 +21,6 @@ internal class MessagePage : BasePage
 
     internal static void Show(string title, Exception exception)
     {
-        AnsiConsole.Clear();
-
         WriteHeader(title);
 
         AnsiConsole.WriteException(exception, ExceptionFormats.NoStackTrace);
@@ -37,8 +33,6 @@ internal class MessagePage : BasePage
 
     internal static void Show(string title, Table table)
     {
-        AnsiConsole.Clear();
-
         WriteHeader(title);
 
         AnsiConsole.Write(table);

@@ -15,7 +15,6 @@ internal class LiveCodingSessionPage : BasePage
     {
         Stopwatch stopwatch = new Stopwatch();
 
-        AnsiConsole.Clear();
         WriteHeader(PageTitle);
         AnsiConsole.WriteLine();
         AnsiConsole.WriteLine();
@@ -26,7 +25,6 @@ internal class LiveCodingSessionPage : BasePage
         DateTime start = DateTime.Now;
         stopwatch.Start();
 
-        AnsiConsole.Clear();
         WriteHeader(PageTitle);
         var stopwatchDisplayRow = Console.CursorTop;
         AnsiConsole.MarkupLine(@$"Current coding session duration: [olive]{stopwatch.Elapsed:hh\:mm\:ss}[/]");

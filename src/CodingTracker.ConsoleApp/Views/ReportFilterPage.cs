@@ -45,8 +45,6 @@ internal class ReportFilterPage : BasePage
 
     internal static ReportFilter? Show()
     {
-        AnsiConsole.Clear();
-
         WriteHeader(PageTitle);
 
         var choice = AnsiConsole.Prompt(

@@ -15,8 +15,6 @@ internal class CreateCodingSessionPage : BasePage
 
     internal static CodingSession? Show()
     {
-        AnsiConsole.Clear();
-
         WriteHeader(PageTitle);
 
         // What date and time string format the coding session uses.

@@ -49,8 +49,6 @@ internal class MainMenuPage : BasePage
 
         while (status != PageStatus.Closed)
         {
-            AnsiConsole.Clear();
-
             WriteHeader(PageTitle);
 
             WriteCodingGoalProgress();

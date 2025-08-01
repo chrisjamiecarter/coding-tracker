@@ -14,8 +14,6 @@ internal class SetCodingGoalPage : BasePage
     
     internal static CodingGoal Show()
     {
-        AnsiConsole.Clear();
-
         WriteHeader(PageTitle);
 
         double duration = UserInputService.GetDouble(
