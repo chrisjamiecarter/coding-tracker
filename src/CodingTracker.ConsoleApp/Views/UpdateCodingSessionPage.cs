@@ -13,7 +13,6 @@ namespace CodingTracker.ConsoleApp.Views;
 internal class UpdateCodingSessionPage : BasePage
 {
     private const string PageTitle = "Update Coding Session";
-    private const string PromptTitle = "Select an option...";
 
     internal static IEnumerable<UserChoice> PageChoices
     {
