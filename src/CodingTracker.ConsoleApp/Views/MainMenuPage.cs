@@ -1,4 +1,6 @@
-﻿using CodingTracker.ConsoleApp.Enums;
+﻿using System.ComponentModel;
+using CodingTracker.ConsoleApp.Enums;
+using CodingTracker.ConsoleApp.Extensions;
 using CodingTracker.ConsoleApp.Models;
 using CodingTracker.Constants;
 using CodingTracker.Controllers;
@@ -18,31 +20,39 @@ internal class MainMenuPage : BasePage
     private readonly CodingGoalController _codingGoalController;
     private readonly CodingGoalProgressService _codingGoalProgressService;
 
+    private enum MainMenuPageChoices
+    {
+        [Description("Start live coding session")]
+        LiveCodingSession = 0,
+
+        [Description("View coding sessions report")]
+        ViewCodingSessionsReport = 1,
+
+        [Description("Filter coding sessions report")]
+        FilterCodingSessionsReport = 2,
+
+        [Description("Create coding session record")]
+        CreateCodingSession = 3,
+
+        [Description("Update coding session record")]
+        UpdateCodingSession = 4,
+
+        [Description("Delete coding session record")]
+        DeleteCodingSession = 5,
+
+        [Description("Set coding goal")]
+        SetCodingGoal = 6,
+
+        [Description("Close application")]
+        CloseApplication = 7,
+    }
+
     public MainMenuPage(CodingSessionController codingSessionController, CodingGoalController codingGoalController)
     {
         _codingSessionController = codingSessionController;
         _codingGoalController = codingGoalController;
         _codingGoalProgressService = new(_codingSessionController, _codingGoalController);
     }
-
-    internal static IEnumerable<UserChoice> PageChoices
-    {
-        get
-        {
-            return
-            [
-                new(1, "Start live coding session"),
-                new(2, "View coding sessions report"),
-                new(3, "Filter coding sessions report"),
-                new(4, "Create coding session record"),
-                new(5, "Update coding session record"),
-                new(6, "Delete coding session record"),
-                new(7, "Set coding goal"),
-                new(0, "Close application")
-            ];
-        }
-    }
-
     internal void Show()
     {
         var status = PageStatus.Opened;
@@ -53,14 +63,14 @@ internal class MainMenuPage : BasePage
 
             WriteCodingGoalProgress();
 
-            var option = AnsiConsole.Prompt(
-                new SelectionPrompt<UserChoice>()
+            var choice = AnsiConsole.Prompt(
+                new SelectionPrompt<MainMenuPageChoices>()
                 .Title(PromptTitle)
-                .AddChoices(PageChoices)
-                .UseConverter(c => c.Name!)
+                .AddChoices(Enum.GetValues<MainMenuPageChoices>())
+                .UseConverter(c => c.GetDescription())
                 );
 
-            status = PerformOption(option);
+            status = PerformSelectedChoice(choice);
         }
     }
 
@@ -158,59 +168,51 @@ internal class MainMenuPage : BasePage
         MessagePage.Show("Live Coding Session", $"Coding session created successfully.");
     }
 
-    private PageStatus PerformOption(UserChoice option)
+    private PageStatus PerformSelectedChoice(MainMenuPageChoices choice)
     {
-        switch (option.Id)
+        switch (choice)
         {
-            case 0:
-
-                // Close application.
+            case MainMenuPageChoices.CloseApplication:
+                
                 return PageStatus.Closed;
 
-            case 1:
+            case MainMenuPageChoices.LiveCodingSession:
 
-                // Start live coding session.
                 LiveCodingSession();
                 break;
 
-            case 2:
-                // View coding sessions report.
+            case MainMenuPageChoices.ViewCodingSessionsReport:
+                
                 ViewCodingSessionsReport();
                 break;
 
-            case 3:
+            case MainMenuPageChoices.FilterCodingSessionsReport:
 
-                // Filter coding sessions report.
                 FilterCodingSessionsReport();
                 break;
 
-            case 4:
+            case MainMenuPageChoices.CreateCodingSession:
 
-                // Create coding session record.
                 CreateCodingSession();
                 break;
 
-            case 5:
+            case MainMenuPageChoices.UpdateCodingSession:
 
-                // Update coding session record.
                 UpdateCodingSession();
                 break;
 
-            case 6:
+            case MainMenuPageChoices.DeleteCodingSession:
 
-                // Delete coding session record.
                 DeleteCodingSession();
                 break;
 
-            case 7:
+            case MainMenuPageChoices.SetCodingGoal:
 
-                // Set coding goal.
                 SetCodingGoal();
                 break;
 
             default:
 
-                // Do nothing, but remain on this page.
                 break;
         }
 
