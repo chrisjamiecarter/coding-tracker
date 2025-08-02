@@ -1,7 +1,7 @@
-﻿using CodingTracker.Models;
+﻿using CodingTracker.Application.Models;
 using System.Globalization;
 
-namespace CodingTracker.Services;
+namespace CodingTracker.Application.Services;
 
 /// <summary>
 /// Service to handle all user input validation.

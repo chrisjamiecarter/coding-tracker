@@ -1,4 +1,4 @@
-﻿namespace CodingTracker.Constants;
+﻿namespace CodingTracker.Application.Constants;
 
 /// <summary>
 /// Any string format constants required by the Core project.

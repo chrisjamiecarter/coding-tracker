@@ -1,6 +1,6 @@
-﻿using CodingTracker.ConsoleApp.Models;
-using CodingTracker.Constants;
-using CodingTracker.Models;
+﻿using CodingTracker.Application.Constants;
+using CodingTracker.Application.Models;
+using CodingTracker.ConsoleApp.Models;
 using Spectre.Console;
 
 namespace CodingTracker.ConsoleApp.Views;

@@ -1,4 +1,4 @@
-﻿namespace CodingTracker.Enums;
+﻿namespace CodingTracker.Application.Enums;
 
 /// <summary>
 /// The supported types of report filter.

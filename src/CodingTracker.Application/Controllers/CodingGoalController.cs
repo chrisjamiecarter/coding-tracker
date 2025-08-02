@@ -1,7 +1,7 @@
-﻿using CodingTracker.Data.Managers;
-using CodingTracker.Models;
+﻿using CodingTracker.Application.Models;
+using CodingTracker.Data.Managers;
 
-namespace CodingTracker.Controllers;
+namespace CodingTracker.Application.Controllers;
 
 /// <summary>
 /// Controller class for the Coding Goal object and the database entity.

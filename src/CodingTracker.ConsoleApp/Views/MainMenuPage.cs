@@ -1,10 +1,10 @@
 ﻿using System.ComponentModel;
+using CodingTracker.Application.Constants;
+using CodingTracker.Application.Controllers;
+using CodingTracker.Application.Services;
 using CodingTracker.ConsoleApp.Enums;
 using CodingTracker.ConsoleApp.Extensions;
 using CodingTracker.ConsoleApp.Models;
-using CodingTracker.Constants;
-using CodingTracker.Controllers;
-using CodingTracker.Services;
 using Spectre.Console;
 
 namespace CodingTracker.ConsoleApp.Views;

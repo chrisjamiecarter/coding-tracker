@@ -1,6 +1,6 @@
-﻿using CodingTracker.Controllers;
+﻿using CodingTracker.Application.Controllers;
 
-namespace CodingTracker.Services;
+namespace CodingTracker.Application.Services;
 
 /// <summary>
 /// Service to handle Coding Goal Process calculations.

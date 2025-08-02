@@ -1,7 +1,7 @@
-﻿using CodingTracker.Constants;
-using CodingTracker.Enums;
+﻿using CodingTracker.Application.Constants;
+using CodingTracker.Application.Enums;
 
-namespace CodingTracker.Models;
+namespace CodingTracker.Application.Models;
 
 /// <summary>
 /// The filter to apply to a Report.

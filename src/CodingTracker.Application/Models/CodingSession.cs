@@ -1,6 +1,6 @@
 ﻿using CodingTracker.Data.Entities;
 
-namespace CodingTracker.Models;
+namespace CodingTracker.Application.Models;
 
 /// <summary>
 /// Coding session data transformation object.

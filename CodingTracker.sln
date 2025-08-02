@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodingTracker.ConsoleApp", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodingTracker.Data", "src\CodingTracker.Data\CodingTracker.Data.csproj", "{EAA770F4-BF39-4259-BA9B-03AA07EF2F8D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodingTracker.Tests", "tests\CodingTracker.Tests\CodingTracker.Tests.csproj", "{E9BFB12F-0623-4633-914E-B8C94D90A79F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodingTracker.Application.Tests", "tests\CodingTracker.Application.Tests\CodingTracker.Application.Tests.csproj", "{E9BFB12F-0623-4633-914E-B8C94D90A79F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

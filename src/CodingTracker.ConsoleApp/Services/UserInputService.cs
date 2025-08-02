@@ -1,4 +1,4 @@
-﻿using CodingTracker.Models;
+﻿using CodingTracker.Application.Models;
 using Spectre.Console;
 using System.Globalization;
 

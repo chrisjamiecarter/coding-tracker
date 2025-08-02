@@ -1,4 +1,4 @@
-﻿namespace CodingTracker.Models;
+﻿namespace CodingTracker.Application.Models;
 
 /// <summary>
 /// A report view specific coding session data transformation object.

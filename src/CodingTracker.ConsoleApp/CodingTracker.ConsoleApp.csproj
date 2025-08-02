@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CodingTracker\CodingTracker.csproj" />
+    <ProjectReference Include="..\CodingTracker.Application\CodingTracker.Application.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,9 +1,9 @@
-﻿using CodingTracker.ConsoleApp.Models;
+﻿using CodingTracker.Application.Constants;
+using CodingTracker.Application.Enums;
+using CodingTracker.Application.Models;
+using CodingTracker.Application.Services;
+using CodingTracker.ConsoleApp.Models;
 using CodingTracker.ConsoleApp.Services;
-using CodingTracker.Constants;
-using CodingTracker.Enums;
-using CodingTracker.Models;
-using CodingTracker.Services;
 using Spectre.Console;
 
 namespace CodingTracker.ConsoleApp.Views;

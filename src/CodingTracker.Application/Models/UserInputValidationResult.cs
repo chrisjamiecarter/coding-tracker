@@ -1,4 +1,4 @@
-﻿namespace CodingTracker.Models;
+﻿namespace CodingTracker.Application.Models;
 
 /// <summary>
 /// The result of a validation action on a user input and the output message.

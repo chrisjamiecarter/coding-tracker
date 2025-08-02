@@ -1,7 +1,7 @@
 using System.Globalization;
-using CodingTracker.Services;
+using CodingTracker.Application.Services;
 
-namespace CodingTracker.Tests.Services;
+namespace CodingTracker.Application.Tests.Services;
 
 [TestClass]
 public class UserInputValidationServiceTests
@@ -121,7 +121,7 @@ public class UserInputValidationServiceTests
     public void IsValidReportEndDate_ShouldReturnTrue_WhenDateAsStringMatchesFormatAndIsEqualToOrAfterStartDate(string startDateString, string test, string format)
     {
         // Arrange.
-        DateTime startDate = DateTime.ParseExact(startDateString, format, CultureInfo.InvariantCulture, DateTimeStyles.None);
+        var startDate = DateTime.ParseExact(startDateString, format, CultureInfo.InvariantCulture, DateTimeStyles.None);
 
         // Act.
         var result = UserInputValidationService.IsValidReportEndDate(test, format, startDate);
@@ -138,7 +138,7 @@ public class UserInputValidationServiceTests
     public void IsValidReportEndDate_ShouldReturnFalse_WhenEndDateIsBeforeStartDate(string startDateString, string test, string format)
     {
         // Arrange.
-        DateTime startDate = DateTime.ParseExact(startDateString, format, CultureInfo.InvariantCulture, DateTimeStyles.None);
+        var startDate = DateTime.ParseExact(startDateString, format, CultureInfo.InvariantCulture, DateTimeStyles.None);
 
         // Act.
         var result = UserInputValidationService.IsValidReportEndDate(test, format, startDate);
@@ -281,7 +281,7 @@ public class UserInputValidationServiceTests
     public void IsValidCodingSessionEndDateTime_ShouldReturnTrue_WhenDateAsStringMatchesFormatAndIsAfterStartDateTime(string startDateTimeString, string test, string format)
     {
         // Arrange.
-        DateTime startDate = DateTime.ParseExact(startDateTimeString, format, CultureInfo.InvariantCulture, DateTimeStyles.None);
+        var startDate = DateTime.ParseExact(startDateTimeString, format, CultureInfo.InvariantCulture, DateTimeStyles.None);
 
         // Act.
         var result = UserInputValidationService.IsValidCodingSessionEndDateTime(test, format, startDate);
@@ -302,7 +302,7 @@ public class UserInputValidationServiceTests
     public void IsValidCodingSessionEndDateTime_ShouldReturnFalse_WhenEndDateIsEqualToOrBeforeStartDateTime(string startDateTimeString, string test, string format)
     {
         // Arrange.
-        DateTime startDate = DateTime.ParseExact(startDateTimeString, format, CultureInfo.InvariantCulture, DateTimeStyles.None);
+        var startDate = DateTime.ParseExact(startDateTimeString, format, CultureInfo.InvariantCulture, DateTimeStyles.None);
 
         // Act.
         var result = UserInputValidationService.IsValidCodingSessionEndDateTime(test, format, startDate);
