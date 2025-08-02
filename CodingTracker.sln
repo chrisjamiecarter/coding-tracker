@@ -15,7 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{1B3044E1-262
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{B2385587-AEFD-4F8E-90E6-FC2D615D62FF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodingTracker", "src\CodingTracker\CodingTracker.csproj", "{7EF24D08-2BFB-4CBF-8F9E-57902A3BDA55}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodingTracker.Application", "src\CodingTracker.Application\CodingTracker.Application.csproj", "{7EF24D08-2BFB-4CBF-8F9E-57902A3BDA55}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodingTracker.ConsoleApp", "src\CodingTracker.ConsoleApp\CodingTracker.ConsoleApp.csproj", "{C22963A4-8361-4D58-9C80-04404A2DC8EC}"
 EndProject
