@@ -1,8 +1,8 @@
-﻿using CodingTracker.ConsoleApp.Views;
-using CodingTracker.Controllers;
-using Spectre.Console;
-using System.Configuration;
+﻿using System.Configuration;
+using CodingTracker.Application.Controllers;
 using CodingTracker.ConsoleApp.Extensions;
+using CodingTracker.ConsoleApp.Views;
+using Spectre.Console;
 
 namespace CodingTracker.ConsoleApp;
 

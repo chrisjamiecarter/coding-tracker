@@ -1,6 +1,6 @@
-﻿using CodingTracker.Constants;
+﻿using System.Text;
+using CodingTracker.Application.Constants;
 using Spectre.Console;
-using System.Text;
 
 namespace CodingTracker.ConsoleApp.Views;
 
@@ -27,7 +27,7 @@ internal abstract class BasePage
     {
         var sb = new StringBuilder();
         sb.AppendLine(DividerLine);
-        sb.AppendLine($"[bold cyan2]{Application.Title}[/]: [honeydew2]{pageTitle}[/]");
+        sb.AppendLine($"[bold cyan2]{Page.Title}[/]: [honeydew2]{pageTitle}[/]");
         sb.AppendLine(DividerLine);
         sb.AppendLine();
         return sb.ToString();
