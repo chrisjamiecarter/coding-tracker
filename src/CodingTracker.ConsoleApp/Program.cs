@@ -2,6 +2,7 @@
 using CodingTracker.Application.Controllers;
 using CodingTracker.ConsoleApp.Extensions;
 using CodingTracker.ConsoleApp.Views;
+using Microsoft.Extensions.Hosting;
 using Spectre.Console;
 
 namespace CodingTracker.ConsoleApp;
@@ -15,6 +16,13 @@ internal class Program
     /// <param name="args">Any arguments passed in.</param>
     private static void Main(string[] args)
     {
+        using IHost host = Host.CreateDefaultBuilder()
+            .ConfigureServices((context, services) =>
+            {
+
+            })
+            .Build();
+
         try
         {
             // Read required configuration settings.
