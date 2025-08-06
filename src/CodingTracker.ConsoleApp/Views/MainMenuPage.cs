@@ -4,7 +4,6 @@ using CodingTracker.Application.Controllers;
 using CodingTracker.Application.Services;
 using CodingTracker.ConsoleApp.Enums;
 using CodingTracker.ConsoleApp.Extensions;
-using CodingTracker.ConsoleApp.Models;
 using Spectre.Console;
 
 namespace CodingTracker.ConsoleApp.Views;
@@ -19,6 +18,13 @@ internal class MainMenuPage : BasePage
     private readonly CodingSessionController _codingSessionController;
     private readonly CodingGoalController _codingGoalController;
     private readonly CodingGoalProgressService _codingGoalProgressService;
+
+    public MainMenuPage(CodingSessionController codingSessionController, CodingGoalController codingGoalController)
+    {
+        _codingSessionController = codingSessionController;
+        _codingGoalController = codingGoalController;
+        _codingGoalProgressService = new(_codingSessionController, _codingGoalController);
+    }
 
     private enum MainMenuPageChoices
     {
@@ -47,12 +53,6 @@ internal class MainMenuPage : BasePage
         CloseApplication = 7,
     }
 
-    public MainMenuPage(CodingSessionController codingSessionController, CodingGoalController codingGoalController)
-    {
-        _codingSessionController = codingSessionController;
-        _codingGoalController = codingGoalController;
-        _codingGoalProgressService = new(_codingSessionController, _codingGoalController);
-    }
     internal void Show()
     {
         var status = PageStatus.Opened;
@@ -89,7 +89,7 @@ internal class MainMenuPage : BasePage
         _codingSessionController.AddCodingSession(codingSession.StartTime, codingSession.EndTime);
 
         // Display output.
-        MessagePage.Show("Create Coding Session", $"Coding session created successfully.");
+        MessagePage.Show("Create Coding Session", "Coding session created successfully.");
     }
 
     private void DeleteCodingSession()
@@ -110,7 +110,7 @@ internal class MainMenuPage : BasePage
         _codingSessionController.DeleteCodingSession(codingSession.Id);
 
         // Display output.
-        MessagePage.Show("Delete Coding Session", $"Coding session deleted successfully.");
+        MessagePage.Show("Delete Coding Session", "Coding session deleted successfully.");
     }
 
     private void FilterCodingSessionsReport()
@@ -165,7 +165,7 @@ internal class MainMenuPage : BasePage
         _codingSessionController.AddCodingSession(codingSession.StartTime, codingSession.EndTime);
 
         // Display output.
-        MessagePage.Show("Live Coding Session", $"Coding session created successfully.");
+        MessagePage.Show("Live Coding Session", "Coding session created successfully.");
     }
 
     private PageStatus PerformSelectedChoice(MainMenuPageChoices choice)
@@ -173,7 +173,7 @@ internal class MainMenuPage : BasePage
         switch (choice)
         {
             case MainMenuPageChoices.CloseApplication:
-                
+
                 return PageStatus.Closed;
 
             case MainMenuPageChoices.LiveCodingSession:
@@ -182,7 +182,7 @@ internal class MainMenuPage : BasePage
                 break;
 
             case MainMenuPageChoices.ViewCodingSessionsReport:
-                
+
                 ViewCodingSessionsReport();
                 break;
 

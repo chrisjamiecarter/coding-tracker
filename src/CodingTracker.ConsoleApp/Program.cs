@@ -2,40 +2,45 @@
 using CodingTracker.Application.Controllers;
 using CodingTracker.ConsoleApp.Extensions;
 using CodingTracker.ConsoleApp.Views;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Spectre.Console;
 
 namespace CodingTracker.ConsoleApp;
 
+/// <summary>
+/// The entry point for the application.
+/// Configures the required services and middleware before running the application.
+/// </summary>
 internal class Program
 {
-    /// <summary>
-    /// Main insertion point of the program.
-    /// Gets config settings and launches the main menu.
-    /// </summary>
-    /// <param name="args">Any arguments passed in.</param>
     private static void Main(string[] args)
     {
+        // Read required configuration settings.
+        string databaseConnectionString = ConfigurationManager.AppSettings.GetString("DatabaseConnectionString");
+        bool seedDatabase = ConfigurationManager.AppSettings.GetBoolean("SeedDatabase");
+
         using IHost host = Host.CreateDefaultBuilder()
             .ConfigureServices((context, services) =>
             {
-
+                services.AddScoped<CodingGoalController>(x => new(databaseConnectionString));
+                services.AddScoped<CodingSessionController>(x => new(databaseConnectionString));
+                services.AddTransient<MainMenuPage>();
             })
             .Build();
 
         try
         {
-            // Read required configuration settings.
-            string databaseConnectionString = ConfigurationManager.AppSettings.GetString("DatabaseConnectionString");
-            bool seedDatabase = ConfigurationManager.AppSettings.GetBoolean("SeedDatabase");
-
             // Create the required services.
-            var codingSessionController = new CodingSessionController(databaseConnectionString);
-            var codingGoalController = new CodingGoalController(databaseConnectionString);
+            //var codingSessionController = new CodingSessionController(databaseConnectionString);
+            //var codingGoalController = new CodingGoalController(databaseConnectionString);
 
             // Generate seed data if required.
             if (seedDatabase)
             {
+                using var scope = host.Services.CreateScope();
+                var codingSessionController = scope.ServiceProvider.GetRequiredService<CodingSessionController>();
+
                 // Could be a long(ish) process, so show a spinner while it works.
                 AnsiConsole.Status()
                     .Spinner(Spinner.Known.Aesthetic)
@@ -45,18 +50,17 @@ internal class Program
                     });
                 AnsiConsole.WriteLine("Seed data generated.");
             }
-
+            
             // Show the main menu.
-            var mainMenu = new MainMenuPage(codingSessionController, codingGoalController);
-            mainMenu.Show();
+            var mainMenuPage = host.Services.GetRequiredService<MainMenuPage>();
+            mainMenuPage.Show();
+            
+            Environment.Exit(0);
         }
         catch (Exception exception)
         {
-            MessagePage.Show("Error", exception);
-        }
-        finally
-        {
-            Environment.Exit(0);
+            ErrorPage.Show(exception);
+            Environment.Exit(-1);
         }
     }
 }
