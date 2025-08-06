@@ -16,13 +16,11 @@ public partial class SqliteDataManager
         (
              StartTime
             ,EndTime
-            ,Duration
         )
         VALUES
         (
              $StartTime
             ,$EndTime
-            ,$Duration
         )
         ;";
 
@@ -57,20 +55,18 @@ public partial class SqliteDataManager
         UPDATE
             CodingSession
         SET
-                StartTime = $StartTime
+             StartTime = $StartTime
             ,EndTime = $EndTime
-            ,Duration = $Duration
         WHERE
             Id = $Id
         ;";
 
-    public void AddCodingSession(DateTime start, DateTime end, double duration)
+    public void AddCodingSession(DateTime start, DateTime end)
     {
         var parameters = new
         { 
             StartTime = start.ToSqliteDateTimeString(),
             EndTime = end.ToSqliteDateTimeString(),
-            Duration = duration
         };
 
         using var connection = new SQLiteConnection(ConnectionString);
@@ -109,14 +105,13 @@ public partial class SqliteDataManager
         return connection.Query<CodingSessionEntity>(GetCodingSessionsQuery).ToList();
     }
 
-    public void SetCodingSession(int id, DateTime start, DateTime end, double duration)
+    public void SetCodingSession(int id, DateTime start, DateTime end)
     {
         var parameters = new
         {
             Id = id,
             StartTime = start.ToSqliteDateTimeString(),
             EndTime = end.ToSqliteDateTimeString(),
-            Duration = duration
         };
 
         using var connection = new SQLiteConnection(ConnectionString);

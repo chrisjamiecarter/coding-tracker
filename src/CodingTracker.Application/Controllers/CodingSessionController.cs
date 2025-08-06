@@ -17,8 +17,7 @@ public class CodingSessionController
 
     public void AddCodingSession(DateTime startTime, DateTime endTime)
     {
-        var duration = CalculateDuration(startTime, endTime);
-        _dataManager.AddCodingSession(startTime, endTime, duration);
+        _dataManager.AddCodingSession(startTime, endTime);
     }
 
     public void DeleteCodingSession(int codingSessionId)
@@ -42,26 +41,13 @@ public class CodingSessionController
             {
                 var endDateTime = DateTime.Now.AddDays(-i).AddMinutes(-Random.Shared.Next(0, 120));
                 var startDateTime = endDateTime.AddMinutes(-Random.Shared.Next(1, 120));
-                var duration = (endDateTime - startDateTime).TotalHours;
-                _dataManager.AddCodingSession(startDateTime, endDateTime, duration);
+                _dataManager.AddCodingSession(startDateTime, endDateTime);
             }
         }
     }
 
     public void SetCodingSession(int codingSessionId, DateTime startTime, DateTime endTime)
     {
-        var duration = CalculateDuration(startTime, endTime);
-        _dataManager.SetCodingSession(codingSessionId, startTime, endTime, duration);
-    }
-
-    /// <summary>
-    /// Requirement: Do not let user enter duration. Must be calculated in the CodingSessionController.
-    /// </summary>
-    /// <param name="startTime">The start time to calculate from.</param>
-    /// <param name="endTime">The end time to calculate to.</param>
-    /// <returns>The total hours between the start and the end times.</returns>
-    private static double CalculateDuration(DateTime startTime, DateTime endTime)
-    {
-        return (endTime - startTime).TotalHours;
+        _dataManager.SetCodingSession(codingSessionId, startTime, endTime);
     }
 }
