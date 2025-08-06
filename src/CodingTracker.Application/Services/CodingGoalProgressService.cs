@@ -3,7 +3,7 @@
 namespace CodingTracker.Application.Services;
 
 /// <summary>
-/// Service to handle Coding Goal Process calculations.
+/// Service to handle Coding Goal Progress calculations.
 /// </summary>
 public class CodingGoalProgressService
 {

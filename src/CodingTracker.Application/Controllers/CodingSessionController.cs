@@ -38,7 +38,7 @@ public class CodingSessionController
     {
         if (_dataManager.GetCodingSessions().Count == 0)
         {
-            for (int i = 100; i > 0; i--)
+            for (int i = 10; i > 0; i--)
             {
                 var endDateTime = DateTime.Now.AddDays(-i).AddMinutes(-Random.Shared.Next(0, 120));
                 var startDateTime = endDateTime.AddMinutes(-Random.Shared.Next(1, 120));

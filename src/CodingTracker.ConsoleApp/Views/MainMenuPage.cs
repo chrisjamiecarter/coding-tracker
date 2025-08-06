@@ -234,7 +234,7 @@ internal class MainMenuPage : BasePage
         _codingGoalController.SetCodingGoal(codingGoal.WeeklyDurationInHours);
 
         // Display output.
-        MessagePage.Show("Set Coding Goal", $"Coding goal set successfully.");
+        MessagePage.Show("Set Coding Goal", "Coding goal set successfully.");
     }
 
     private void UpdateCodingSession()
@@ -255,7 +255,7 @@ internal class MainMenuPage : BasePage
         _codingSessionController.SetCodingSession(codingSession.Id, codingSession.StartTime, codingSession.EndTime);
 
         // Display output.
-        MessagePage.Show("Update Coding Session", $"Coding session updated successfully.");
+        MessagePage.Show("Update Coding Session", "Coding session updated successfully.");
     }
 
     private void ViewCodingSessionsReport()
