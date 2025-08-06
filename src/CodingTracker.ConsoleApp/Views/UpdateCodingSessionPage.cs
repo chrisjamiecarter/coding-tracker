@@ -95,7 +95,7 @@ internal class UpdateCodingSessionPage : BasePage
     private static UserChoice GetOption(List<CodingSession> codingSessions)
     {
         // Add the coding sessions to the existing PageChoices.
-        IEnumerable<UserChoice> pageChoices = [.. PageChoices, .. codingSessions.Select(x => new UserChoice(x.Id, $"{x.StartTime.ToString(StringFormat.DateTime)} - {x.EndTime.ToString(StringFormat.DateTime)} ({x.Duration:F2)})"))];
+        IEnumerable<UserChoice> pageChoices = [.. PageChoices, .. codingSessions.Select(x => new UserChoice(x.Id, $"{x.StartTime.ToString(StringFormat.DateTime)} - {x.EndTime.ToString(StringFormat.DateTime)} ({x.Duration:F2})"))];
 
         return AnsiConsole.Prompt(
                 new SelectionPrompt<UserChoice>()
