@@ -1,16 +1,16 @@
 ﻿using CodingTracker.Application.Models;
 using CodingTracker.Data.Managers;
 
-namespace CodingTracker.Application.Controllers;
+namespace CodingTracker.Application.Services;
 
 /// <summary>
-/// Controller class for the Coding Session object and the database entity.
+/// Business logic class for the Coding Session object and the database entity.
 /// </summary>
-public class CodingSessionController
+public class CodingSessionService
 {
     private readonly SqliteDataManager _dataManager;
 
-    public CodingSessionController(SqliteDataManager dataManager)
+    public CodingSessionService(SqliteDataManager dataManager)
     {
         _dataManager = dataManager;
     }

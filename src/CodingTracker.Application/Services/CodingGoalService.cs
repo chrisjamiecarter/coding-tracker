@@ -1,16 +1,16 @@
 ﻿using CodingTracker.Application.Models;
 using CodingTracker.Data.Managers;
 
-namespace CodingTracker.Application.Controllers;
+namespace CodingTracker.Application.Services;
 
 /// <summary>
-/// Controller class for the Coding Goal object and the database entity.
+/// Business logic class for the Coding Goal object and the database entity.
 /// </summary>
-public class CodingGoalController
+public class CodingGoalService
 {
     private readonly SqliteDataManager _dataManager;
 
-    public CodingGoalController(SqliteDataManager dataManager)
+    public CodingGoalService(SqliteDataManager dataManager)
     {
         _dataManager = dataManager;
     }

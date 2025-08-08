@@ -1,24 +1,22 @@
-﻿using CodingTracker.Application.Controllers;
-
-namespace CodingTracker.Application.Services;
+﻿namespace CodingTracker.Application.Services;
 
 /// <summary>
 /// Service to handle Coding Goal Progress calculations.
 /// </summary>
 public class CodingGoalProgressService
 {
-    private readonly CodingSessionController _codingSessionController;
-    private readonly CodingGoalController _codingGoalController;
+    private readonly CodingSessionService _codingSessionService;
+    private readonly CodingGoalService _codingGoalService;
 
-    public CodingGoalProgressService(CodingSessionController codingSessionController, CodingGoalController codingGoalController)
+    public CodingGoalProgressService(CodingSessionService codingSessionService, CodingGoalService codingGoalService)
     {
-        _codingSessionController = codingSessionController;
-        _codingGoalController = codingGoalController;
+        _codingSessionService = codingSessionService;
+        _codingGoalService = codingGoalService;
     }
 
     public string GetCodingGoalProgress()
     {
-        var codingGoal = _codingGoalController.GetCodingGoal();
+        var codingGoal = _codingGoalService.GetCodingGoal();
         if (codingGoal == null || codingGoal.WeeklyDurationInHours == 0)
         {
             return "please set a coding goal for motivation.";
@@ -29,10 +27,10 @@ public class CodingGoalProgressService
         var endOfWeek = startOfWeek.AddDays(7).AddTicks(-1);
 
         // Get the total duration spent this week.
-        var codingSessions = _codingSessionController.GetCodingSessions().Where(w => w.StartTime >= startOfWeek && w.EndTime <= endOfWeek);
+        var codingSessions = _codingSessionService.GetCodingSessions().Where(w => w.StartTime >= startOfWeek && w.EndTime <= endOfWeek);
         double totalDuration = codingSessions.Sum(x => x.Duration);
 
-        // Get difference
+        // Get difference.
         double difference = codingGoal.WeeklyDurationInHours - totalDuration;
 
         // Goal Reached?

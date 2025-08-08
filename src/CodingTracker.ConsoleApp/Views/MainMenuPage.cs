@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel;
 using CodingTracker.Application.Constants;
-using CodingTracker.Application.Controllers;
 using CodingTracker.Application.Services;
 using CodingTracker.ConsoleApp.Enums;
 using CodingTracker.ConsoleApp.Extensions;
@@ -15,15 +14,15 @@ internal class MainMenuPage : BasePage
 {
     private const string PageTitle = "Main Menu";
 
-    private readonly CodingSessionController _codingSessionController;
-    private readonly CodingGoalController _codingGoalController;
+    private readonly CodingSessionService _codingSessionController;
+    private readonly CodingGoalService _codingGoalController;
     private readonly CodingGoalProgressService _codingGoalProgressService;
 
-    public MainMenuPage(CodingSessionController codingSessionController, CodingGoalController codingGoalController)
+    public MainMenuPage(CodingSessionService codingSessionController, CodingGoalService codingGoalController, CodingGoalProgressService codingGoalProgressService)
     {
         _codingSessionController = codingSessionController;
         _codingGoalController = codingGoalController;
-        _codingGoalProgressService = new(_codingSessionController, _codingGoalController);
+        _codingGoalProgressService = codingGoalProgressService;
     }
 
     private enum MainMenuPageChoices

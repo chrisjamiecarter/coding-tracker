@@ -1,5 +1,5 @@
 ﻿using System.Configuration;
-using CodingTracker.Application.Controllers;
+using CodingTracker.Application.Services;
 using CodingTracker.ConsoleApp.Extensions;
 using CodingTracker.ConsoleApp.Views;
 using CodingTracker.Data.Managers;
@@ -25,8 +25,9 @@ internal class Program
             .ConfigureServices((context, services) =>
             {
                 services.AddScoped<SqliteDataManager>(x => new(databaseConnectionString));
-                services.AddScoped<CodingGoalController>();
-                services.AddScoped<CodingSessionController>();
+                services.AddScoped<CodingGoalService>();
+                services.AddScoped<CodingSessionService>();
+                services.AddScoped<CodingGoalProgressService>();
                 services.AddTransient<MainMenuPage>();
             })
             .Build();
@@ -37,7 +38,7 @@ internal class Program
             if (seedDatabase)
             {
                 using var scope = host.Services.CreateScope();
-                var codingSessionController = scope.ServiceProvider.GetRequiredService<CodingSessionController>();
+                var codingSessionController = scope.ServiceProvider.GetRequiredService<CodingSessionService>();
 
                 // Could be a long(ish) process, so show a spinner while it works.
                 AnsiConsole.Status()
