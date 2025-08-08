@@ -31,10 +31,6 @@ internal class Program
 
         try
         {
-            // Create the required services.
-            //var codingSessionController = new CodingSessionController(databaseConnectionString);
-            //var codingGoalController = new CodingGoalController(databaseConnectionString);
-
             // Generate seed data if required.
             if (seedDatabase)
             {
