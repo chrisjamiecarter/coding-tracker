@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using CodingTracker.Application.Constants;
 using Spectre.Console;
 
 namespace CodingTracker.ConsoleApp.Views;
@@ -9,12 +8,15 @@ namespace CodingTracker.ConsoleApp.Views;
 /// </summary>
 internal abstract class BasePage
 {
+    protected static readonly string ApplicationTitle = "Coding Tracker";
     protected static readonly string PromptTitle = "Select an [blue]option[/]...";
-    private static readonly string DividerLine = "[cyan2]----------------------------------------[/]";
+    protected static readonly string DividerLine = "[cyan2]----------------------------------------[/]";
 
     protected static void WriteFooter()
     {
+        AnsiConsole.Write(new Rule().RuleStyle("grey").LeftJustified());
         AnsiConsole.Markup($"{Environment.NewLine}Press any [blue]key[/] to continue...");
+        Console.ReadKey();
     }
 
     protected static void WriteHeader(string title)
@@ -25,11 +27,11 @@ internal abstract class BasePage
 
     private static string GetHeaderText(string pageTitle)
     {
-        var sb = new StringBuilder();
-        sb.AppendLine(DividerLine);
-        sb.AppendLine($"[bold cyan2]{Page.Title}[/]: [honeydew2]{pageTitle}[/]");
-        sb.AppendLine(DividerLine);
-        sb.AppendLine();
-        return sb.ToString();
+        var builder = new StringBuilder();
+        builder.AppendLine(DividerLine);
+        builder.AppendLine($"[bold cyan2]{ApplicationTitle}[/]: [honeydew2]{pageTitle}[/]");
+        builder.AppendLine(DividerLine);
+        builder.AppendLine();
+        return builder.ToString();
     }
 }
