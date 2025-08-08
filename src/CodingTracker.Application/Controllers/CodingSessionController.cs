@@ -10,9 +10,9 @@ public class CodingSessionController
 {
     private readonly SqliteDataManager _dataManager;
 
-    public CodingSessionController(string databaseConnectionString)
+    public CodingSessionController(SqliteDataManager dataManager)
     {
-        _dataManager = new SqliteDataManager(databaseConnectionString);
+        _dataManager = dataManager;
     }
 
     public void AddCodingSession(DateTime startTime, DateTime endTime)
@@ -31,7 +31,7 @@ public class CodingSessionController
     }
 
     /// <summary>
-    /// Seeds the database will 100 random CodingSession entries.
+    /// Seeds the database with 10 random CodingSession entries.
     /// </summary>
     public void SeedDatabase()
     {

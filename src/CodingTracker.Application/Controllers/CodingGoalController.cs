@@ -10,9 +10,9 @@ public class CodingGoalController
 {
     private readonly SqliteDataManager _dataManager;
 
-    public CodingGoalController(string databaseConnectionString)
+    public CodingGoalController(SqliteDataManager dataManager)
     {
-        _dataManager = new SqliteDataManager(databaseConnectionString);
+        _dataManager = dataManager;
     }
 
     public CodingGoal GetCodingGoal()

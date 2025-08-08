@@ -2,6 +2,7 @@
 using CodingTracker.Application.Controllers;
 using CodingTracker.ConsoleApp.Extensions;
 using CodingTracker.ConsoleApp.Views;
+using CodingTracker.Data.Managers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Spectre.Console;
@@ -23,8 +24,9 @@ internal class Program
         using IHost host = Host.CreateDefaultBuilder()
             .ConfigureServices((context, services) =>
             {
-                services.AddScoped<CodingGoalController>(x => new(databaseConnectionString));
-                services.AddScoped<CodingSessionController>(x => new(databaseConnectionString));
+                services.AddScoped<SqliteDataManager>(x => new(databaseConnectionString));
+                services.AddScoped<CodingGoalController>();
+                services.AddScoped<CodingSessionController>();
                 services.AddTransient<MainMenuPage>();
             })
             .Build();
