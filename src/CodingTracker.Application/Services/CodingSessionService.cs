@@ -30,22 +30,6 @@ public class CodingSessionService
         return _dataManager.GetCodingSessions().Select(x => new CodingSession(x)).ToList();
     }
 
-    /// <summary>
-    /// Seeds the database with 10 random CodingSession entries.
-    /// </summary>
-    public void SeedDatabase()
-    {
-        if (_dataManager.GetCodingSessions().Count == 0)
-        {
-            for (int i = 10; i > 0; i--)
-            {
-                var endDateTime = DateTime.Now.AddDays(-i).AddMinutes(-Random.Shared.Next(0, 120));
-                var startDateTime = endDateTime.AddMinutes(-Random.Shared.Next(1, 120));
-                _dataManager.AddCodingSession(startDateTime, endDateTime);
-            }
-        }
-    }
-
     public void SetCodingSession(int codingSessionId, DateTime startTime, DateTime endTime)
     {
         _dataManager.SetCodingSession(codingSessionId, startTime, endTime);

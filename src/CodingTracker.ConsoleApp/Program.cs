@@ -15,7 +15,7 @@ namespace CodingTracker.ConsoleApp;
 /// </summary>
 internal class Program
 {
-    private static void Main(string[] args)
+    private static async Task Main(string[] args)
     {
         // Read required configuration settings.
         string databaseConnectionString = ConfigurationManager.AppSettings.GetString("DatabaseConnectionString");
@@ -28,6 +28,7 @@ internal class Program
                 services.AddScoped<CodingGoalService>();
                 services.AddScoped<CodingSessionService>();
                 services.AddScoped<CodingGoalProgressService>();
+                services.AddScoped<SeederService>();
                 services.AddTransient<MainMenuPage>();
             })
             .Build();
@@ -38,14 +39,14 @@ internal class Program
             if (seedDatabase)
             {
                 using var scope = host.Services.CreateScope();
-                var codingSessionController = scope.ServiceProvider.GetRequiredService<CodingSessionService>();
+                var seederService = scope.ServiceProvider.GetRequiredService<SeederService>();
 
                 // Could be a long(ish) process, so show a spinner while it works.
-                AnsiConsole.Status()
+                await AnsiConsole.Status()
                     .Spinner(Spinner.Known.Aesthetic)
-                    .Start("Generating seed data. Please wait...", ctx =>
+                    .StartAsync("Generating seed data. Please wait...", async ctx =>
                     {
-                        codingSessionController.SeedDatabase();
+                        await seederService.SeedDatabaseAsync();
                     });
                 AnsiConsole.WriteLine("Seed data generated.");
             }
