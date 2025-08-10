@@ -31,30 +31,28 @@ public partial class SqliteDataManager
     {
         ConnectionString = connectionString;
 
-        Initialise();
+        InitialiseAsync().GetAwaiter().GetResult();
     }
 
     public string ConnectionString { get; init; }
 
-    private void CreateTableCodingSession()
+    private async Task CreateTableCodingSessionAsync()
     {
         using var connection = new SQLiteConnection(ConnectionString);
-        connection.Open();
-        connection.Execute(CreateTableCodingSessionQuery);
+        await connection.ExecuteAsync(CreateTableCodingSessionQuery);
     }
 
-    private void CreateTableCodingGoal()
+    private async Task CreateTableCodingGoalAsync()
     {
         using var connection = new SQLiteConnection(ConnectionString);
-        connection.Open();
-        connection.Execute(CreateTableCodingGoalQuery);
+        await connection.ExecuteAsync(CreateTableCodingGoalQuery);
     }
 
-    private void Initialise()
+    private async Task InitialiseAsync()
     {
         // Put all table creation methods here, in dependency order.
-        CreateTableCodingSession();
-        CreateTableCodingGoal();
-        AddCodingGoal();
+        await CreateTableCodingSessionAsync();
+        await CreateTableCodingGoalAsync();
+        await AddCodingGoalAsync();
     }
 }

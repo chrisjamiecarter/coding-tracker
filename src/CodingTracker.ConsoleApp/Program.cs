@@ -53,7 +53,7 @@ internal class Program
             
             // Show the main menu.
             var mainMenuPage = host.Services.GetRequiredService<MainMenuPage>();
-            mainMenuPage.Show();
+            await mainMenuPage.ShowAsync();
             
             Environment.Exit(0);
         }

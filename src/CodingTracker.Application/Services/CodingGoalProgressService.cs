@@ -1,4 +1,5 @@
-﻿namespace CodingTracker.Application.Services;
+﻿
+namespace CodingTracker.Application.Services;
 
 /// <summary>
 /// Service to handle Coding Goal Progress calculations.
@@ -14,9 +15,9 @@ public class CodingGoalProgressService
         _codingGoalService = codingGoalService;
     }
 
-    public string GetCodingGoalProgress()
+    public async Task<string> GetCodingGoalProgressAsync()
     {
-        var codingGoal = _codingGoalService.GetCodingGoal();
+        var codingGoal = await _codingGoalService.GetCodingGoalAsync();
         if (codingGoal == null || codingGoal.WeeklyDurationInHours == 0)
         {
             return "please set a coding goal for motivation.";
@@ -26,9 +27,11 @@ public class CodingGoalProgressService
         var startOfWeek = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek + (int)DayOfWeek.Monday);
         var endOfWeek = startOfWeek.AddDays(7).AddTicks(-1);
 
+        var codingSessions = await _codingSessionService.GetCodingSessionsAsync();
+
         // Get the total duration spent this week.
-        var codingSessions = _codingSessionService.GetCodingSessions().Where(w => w.StartTime >= startOfWeek && w.EndTime <= endOfWeek);
-        double totalDuration = codingSessions.Sum(x => x.Duration);
+        var filteredCodingSessions = codingSessions.Where(w => w.StartTime >= startOfWeek && w.EndTime <= endOfWeek);
+        double totalDuration = filteredCodingSessions.Sum(x => x.Duration);
 
         // Get difference.
         double difference = codingGoal.WeeklyDurationInHours - totalDuration;

@@ -15,23 +15,24 @@ public class CodingSessionService
         _dataManager = dataManager;
     }
 
-    public void AddCodingSession(DateTime startTime, DateTime endTime)
+    public async Task AddCodingSessionAsync(DateTime startTime, DateTime endTime)
     {
-        _dataManager.AddCodingSession(startTime, endTime);
+        await _dataManager.AddCodingSessionAsync(startTime, endTime);
     }
 
-    public void DeleteCodingSession(int codingSessionId)
+    public async Task DeleteCodingSessionAsync(int codingSessionId)
     {
-        _dataManager.DeleteCodingSession(codingSessionId);
+        await _dataManager.DeleteCodingSessionAsync(codingSessionId);
     }
 
-    public List<CodingSession> GetCodingSessions()
+    public async Task<List<CodingSession>> GetCodingSessionsAsync()
     {
-        return _dataManager.GetCodingSessions().Select(x => new CodingSession(x)).ToList();
+        var codingSessions = await _dataManager.GetCodingSessionsAsync();
+        return [.. codingSessions.Select(x => new CodingSession(x))];
     }
 
-    public void SetCodingSession(int codingSessionId, DateTime startTime, DateTime endTime)
+    public async Task UpdateCodingSessionAsync(int codingSessionId, DateTime startTime, DateTime endTime)
     {
-        _dataManager.SetCodingSession(codingSessionId, startTime, endTime);
+        await _dataManager.UpdateCodingSessionAsync(codingSessionId, startTime, endTime);
     }
 }

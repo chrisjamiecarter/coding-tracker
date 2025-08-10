@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using CodingTracker.Application.Constants;
+using CodingTracker.Application.Models;
 using CodingTracker.Application.Services;
 using CodingTracker.ConsoleApp.Enums;
 using CodingTracker.ConsoleApp.Extensions;
@@ -14,14 +15,14 @@ internal class MainMenuPage : BasePage
 {
     private const string PageTitle = "Main Menu";
 
-    private readonly CodingSessionService _codingSessionController;
-    private readonly CodingGoalService _codingGoalController;
+    private readonly CodingSessionService _codingSessionService;
+    private readonly CodingGoalService _codingGoalService;
     private readonly CodingGoalProgressService _codingGoalProgressService;
 
-    public MainMenuPage(CodingSessionService codingSessionController, CodingGoalService codingGoalController, CodingGoalProgressService codingGoalProgressService)
+    public MainMenuPage(CodingSessionService codingSessionService, CodingGoalService codingGoalService, CodingGoalProgressService codingGoalProgressService)
     {
-        _codingSessionController = codingSessionController;
-        _codingGoalController = codingGoalController;
+        _codingSessionService = codingSessionService;
+        _codingGoalService = codingGoalService;
         _codingGoalProgressService = codingGoalProgressService;
     }
 
@@ -52,7 +53,7 @@ internal class MainMenuPage : BasePage
         CloseApplication = 7,
     }
 
-    internal void Show()
+    internal async Task ShowAsync()
     {
         var status = PageStatus.Opened;
 
@@ -60,7 +61,7 @@ internal class MainMenuPage : BasePage
         {
             WriteHeader(PageTitle);
 
-            WriteCodingGoalProgress();
+            await WriteCodingGoalProgressAsync();
 
             var choice = AnsiConsole.Prompt(
                 new SelectionPrompt<MainMenuPageChoices>()
@@ -69,11 +70,11 @@ internal class MainMenuPage : BasePage
                 .UseConverter(c => c.GetDescription())
                 );
 
-            status = PerformSelectedChoice(choice);
+            status = await PerformSelectedChoiceAsync(choice);
         }
     }
 
-    private void CreateCodingSession()
+    private async Task CreateCodingSessionAsync()
     {
         // Get required data.
         var codingSession = CreateCodingSessionPage.Show();
@@ -85,16 +86,26 @@ internal class MainMenuPage : BasePage
         }
 
         // Commit to database.
-        _codingSessionController.AddCodingSession(codingSession.StartTime, codingSession.EndTime);
+        await AnsiConsole.Status()
+            .Spinner(Spinner.Known.Aesthetic)
+            .StartAsync("Adding coding session. Please wait...", async ctx =>
+            {
+                await _codingSessionService.AddCodingSessionAsync(codingSession.StartTime, codingSession.EndTime);
+            });
 
         // Display output.
         MessagePage.Show("Create Coding Session", "Coding session created successfully.");
     }
 
-    private void DeleteCodingSession()
+    private async Task DeleteCodingSessionAsync()
     {
         // Get required data.
-        var codingSessions = _codingSessionController.GetCodingSessions();
+        var codingSessions = await AnsiConsole.Status()
+            .Spinner(Spinner.Known.Aesthetic)
+            .StartAsync("Getting coding sessions. Please wait...", async ctx =>
+            {
+                return await _codingSessionService.GetCodingSessionsAsync();
+            });
 
         // Get coding session to be deleted.
         var codingSession = DeleteCodingSessionPage.Show(codingSessions);
@@ -106,16 +117,26 @@ internal class MainMenuPage : BasePage
         }
 
         // Commit to database.
-        _codingSessionController.DeleteCodingSession(codingSession.Id);
+        await AnsiConsole.Status()
+            .Spinner(Spinner.Known.Aesthetic)
+            .StartAsync("Deleting coding session. Please wait...", async ctx =>
+            {
+                await _codingSessionService.DeleteCodingSessionAsync(codingSession.Id);
+            });
 
         // Display output.
         MessagePage.Show("Delete Coding Session", "Coding session deleted successfully.");
     }
 
-    private void FilterCodingSessionsReport()
+    private async Task FilterCodingSessionsReportAsync()
     {
         // Get raw data.
-        var data = _codingSessionController.GetCodingSessions();
+        var data = await AnsiConsole.Status()
+            .Spinner(Spinner.Known.Aesthetic)
+            .StartAsync("Getting coding sessions. Please wait...", async ctx =>
+            {
+                return await _codingSessionService.GetCodingSessionsAsync();
+            });
 
         // Get filter.
         var filter = ReportFilterPage.Show();
@@ -155,19 +176,24 @@ internal class MainMenuPage : BasePage
         MessagePage.Show("Coding Session Report", table);
     }
 
-    private void LiveCodingSession()
+    private async Task LiveCodingSessionAsync()
     {
         // Get required data.
         var codingSession = LiveCodingSessionPage.Show();
 
         // Commit to database.
-        _codingSessionController.AddCodingSession(codingSession.StartTime, codingSession.EndTime);
+        await AnsiConsole.Status()
+            .Spinner(Spinner.Known.Aesthetic)
+            .StartAsync("Adding coding session. Please wait...", async ctx =>
+            {
+                await _codingSessionService.AddCodingSessionAsync(codingSession.StartTime, codingSession.EndTime);
+            });
 
         // Display output.
         MessagePage.Show("Live Coding Session", "Coding session created successfully.");
     }
 
-    private PageStatus PerformSelectedChoice(MainMenuPageChoices choice)
+    private async Task<PageStatus> PerformSelectedChoiceAsync(MainMenuPageChoices choice)
     {
         switch (choice)
         {
@@ -177,37 +203,37 @@ internal class MainMenuPage : BasePage
 
             case MainMenuPageChoices.LiveCodingSession:
 
-                LiveCodingSession();
+                await LiveCodingSessionAsync();
                 break;
 
             case MainMenuPageChoices.ViewCodingSessionsReport:
 
-                ViewCodingSessionsReport();
+                await ViewCodingSessionsReportAsync();
                 break;
 
             case MainMenuPageChoices.FilterCodingSessionsReport:
 
-                FilterCodingSessionsReport();
+                await FilterCodingSessionsReportAsync();
                 break;
 
             case MainMenuPageChoices.CreateCodingSession:
 
-                CreateCodingSession();
+                await CreateCodingSessionAsync();
                 break;
 
             case MainMenuPageChoices.UpdateCodingSession:
 
-                UpdateCodingSession();
+                await UpdateCodingSessionAsync();
                 break;
 
             case MainMenuPageChoices.DeleteCodingSession:
 
-                DeleteCodingSession();
+                await DeleteCodingSessionAsync();
                 break;
 
             case MainMenuPageChoices.SetCodingGoal:
 
-                SetCodingGoal();
+                await SetCodingGoalAsync();
                 break;
 
             default:
@@ -218,7 +244,7 @@ internal class MainMenuPage : BasePage
         return PageStatus.Opened;
     }
 
-    private void SetCodingGoal()
+    private async Task SetCodingGoalAsync()
     {
         // Get coding goal.
         var codingGoal = SetCodingGoalPage.Show();
@@ -230,16 +256,26 @@ internal class MainMenuPage : BasePage
         }
 
         // Commit to database.
-        _codingGoalController.SetCodingGoal(codingGoal.WeeklyDurationInHours);
+        await AnsiConsole.Status()
+            .Spinner(Spinner.Known.Aesthetic)
+            .StartAsync("Updating coding goal. Please wait...", async ctx =>
+            {
+                await _codingGoalService.SetCodingGoalAsync(codingGoal.WeeklyDurationInHours);
+            });
 
         // Display output.
         MessagePage.Show("Set Coding Goal", "Coding goal set successfully.");
     }
 
-    private void UpdateCodingSession()
+    private async Task UpdateCodingSessionAsync()
     {
         // Get required data.
-        var codingSessions = _codingSessionController.GetCodingSessions();
+        var codingSessions = await AnsiConsole.Status()
+            .Spinner(Spinner.Known.Aesthetic)
+            .StartAsync("Getting coding sessions. Please wait...", async ctx =>
+            {
+                return await _codingSessionService.GetCodingSessionsAsync();
+            });
 
         // Get updated coding session.
         var codingSession = UpdateCodingSessionPage.Show(codingSessions);
@@ -251,16 +287,26 @@ internal class MainMenuPage : BasePage
         }
 
         // Commit to database.
-        _codingSessionController.SetCodingSession(codingSession.Id, codingSession.StartTime, codingSession.EndTime);
+        await AnsiConsole.Status()
+            .Spinner(Spinner.Known.Aesthetic)
+            .StartAsync("Updating coding sessions. Please wait...", async ctx =>
+            {
+                await _codingSessionService.UpdateCodingSessionAsync(codingSession.Id, codingSession.StartTime, codingSession.EndTime);
+            });
 
         // Display output.
         MessagePage.Show("Update Coding Session", "Coding session updated successfully.");
     }
 
-    private void ViewCodingSessionsReport()
+    private async Task ViewCodingSessionsReportAsync()
     {
         // Get raw data.
-        var data = _codingSessionController.GetCodingSessions();
+        var data = await AnsiConsole.Status()
+            .Spinner(Spinner.Known.Aesthetic)
+            .StartAsync("Getting coding sessions. Please wait...", async ctx =>
+            {
+                return await _codingSessionService.GetCodingSessionsAsync();
+            });
 
         // Configure table data.
         var table = new Table
@@ -288,9 +334,9 @@ internal class MainMenuPage : BasePage
         MessagePage.Show("Coding Session Report", table);
     }
 
-    private void WriteCodingGoalProgress()
+    private async Task WriteCodingGoalProgressAsync()
     {
-        var progress = _codingGoalProgressService.GetCodingGoalProgress();
+        var progress = await _codingGoalProgressService.GetCodingGoalProgressAsync();
         AnsiConsole.WriteLine($"Welcome, {progress}");
         AnsiConsole.WriteLine();
     }

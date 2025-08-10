@@ -18,16 +18,15 @@ public sealed class SeederService
 
     public async Task SeedDatabaseAsync()
     {
-        if (!_dataManager.GetCodingSessions().Any())
+        var codingSessions = await _dataManager.GetCodingSessionsAsync();
+        if (!codingSessions.Any())
         {
             for (int i = SeedRecords; i > 0; i--)
             {
                 var endDateTime = DateTime.Now.AddDays(-i).AddMinutes(-Random.Shared.Next(0, 120));
                 var startDateTime = endDateTime.AddMinutes(-Random.Shared.Next(1, 120));
-                _dataManager.AddCodingSession(startDateTime, endDateTime);
+                await _dataManager.AddCodingSessionAsync(startDateTime, endDateTime);
             }
         }
-
-        await Task.CompletedTask;
     }
 }

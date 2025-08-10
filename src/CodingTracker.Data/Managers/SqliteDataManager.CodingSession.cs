@@ -50,7 +50,7 @@ public partial class SqliteDataManager
             CodingSession
         ;";
 
-    private static readonly string SetCodingSessionQuery =
+    private static readonly string UpdateCodingSessionQuery =
         @"
         UPDATE
             CodingSession
@@ -61,7 +61,7 @@ public partial class SqliteDataManager
             Id = $Id
         ;";
 
-    public void AddCodingSession(DateTime start, DateTime end)
+    public async Task AddCodingSessionAsync(DateTime start, DateTime end)
     {
         var parameters = new
         { 
@@ -70,11 +70,10 @@ public partial class SqliteDataManager
         };
 
         using var connection = new SQLiteConnection(ConnectionString);
-        connection.Open();
-        connection.Execute(AddCodingSessionQuery, parameters);
+        await connection.ExecuteAsync(AddCodingSessionQuery, parameters);
     }
 
-    public void DeleteCodingSession(int id)
+    public async Task DeleteCodingSessionAsync(int id)
     {
         var parameters = new
         {
@@ -82,11 +81,10 @@ public partial class SqliteDataManager
         };
 
         using var connection = new SQLiteConnection(ConnectionString);
-        connection.Open();
-        connection.Execute(DeleteCodingSessionQuery, parameters);
+        await connection.ExecuteAsync(DeleteCodingSessionQuery, parameters);
     }
 
-    public CodingSessionEntity GetCodingSession(int id)
+    public async Task<CodingSessionEntity> GetCodingSessionAsync(int id)
     {
         var parameters = new
         {
@@ -94,18 +92,17 @@ public partial class SqliteDataManager
         };
 
         using var connection = new SQLiteConnection(ConnectionString);
-        connection.Open();
-        return connection.QuerySingle<CodingSessionEntity>(GetCodingSessionQuery, parameters);
+        return await connection.QuerySingleAsync<CodingSessionEntity>(GetCodingSessionQuery, parameters);
     }
 
-    public IReadOnlyList<CodingSessionEntity> GetCodingSessions()
+    public async Task<IReadOnlyList<CodingSessionEntity>> GetCodingSessionsAsync()
     {
         using var connection = new SQLiteConnection(ConnectionString);
-        connection.Open();
-        return connection.Query<CodingSessionEntity>(GetCodingSessionsQuery).ToList();
+        var output = await connection.QueryAsync<CodingSessionEntity>(GetCodingSessionsQuery);
+        return output.AsList();
     }
 
-    public void SetCodingSession(int id, DateTime start, DateTime end)
+    public async Task UpdateCodingSessionAsync(int id, DateTime start, DateTime end)
     {
         var parameters = new
         {
@@ -115,7 +112,6 @@ public partial class SqliteDataManager
         };
 
         using var connection = new SQLiteConnection(ConnectionString);
-        connection.Open();
-        connection.Execute(SetCodingSessionQuery, parameters);
+        await connection.ExecuteAsync(UpdateCodingSessionQuery, parameters);
     }
 }

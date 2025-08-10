@@ -15,14 +15,14 @@ public class CodingGoalService
         _dataManager = dataManager;
     }
 
-    public CodingGoal GetCodingGoal()
+    public async Task<CodingGoal> GetCodingGoalAsync()
     {
-        var entity = _dataManager.GetCodingGoal();
+        var entity = await _dataManager.GetCodingGoalAsync();
         return new CodingGoal(entity);
     }
 
-    public void SetCodingGoal(double weeklyDurationInHours)
+    public async Task SetCodingGoalAsync(double weeklyDurationInHours)
     {
-        _dataManager.SetCodingGoal(weeklyDurationInHours);
+        await _dataManager.SetCodingGoalAsync(weeklyDurationInHours);
     }
 }

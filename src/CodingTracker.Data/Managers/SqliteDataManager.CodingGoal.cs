@@ -44,21 +44,19 @@ public partial class SqliteDataManager
             Id = 1
         ;";
 
-    public void AddCodingGoal()
+    public async Task AddCodingGoalAsync()
     {
         using var connection = new SQLiteConnection(ConnectionString);
-        connection.Open();
-        connection.Execute(AddCodingGoalQuery);
+        await connection.ExecuteAsync(AddCodingGoalQuery);
     }
 
-    public CodingGoalEntity GetCodingGoal()
+    public async Task<CodingGoalEntity> GetCodingGoalAsync()
     {
         using var connection = new SQLiteConnection(ConnectionString);
-        connection.Open();
-        return connection.QuerySingle<CodingGoalEntity>(GetCodingGoalQuery);
+        return await connection.QuerySingleAsync<CodingGoalEntity>(GetCodingGoalQuery);
     }
 
-    public void SetCodingGoal(double weeklyDurationInHours)
+    public async Task SetCodingGoalAsync(double weeklyDurationInHours)
     {
         var parameters = new
         {
@@ -66,7 +64,6 @@ public partial class SqliteDataManager
         };
 
         using var connection = new SQLiteConnection(ConnectionString);
-        connection.Open();
-        connection.Execute(SetCodingGoalQuery, parameters);
+        await connection.ExecuteAsync(SetCodingGoalQuery, parameters);
     }
 }
